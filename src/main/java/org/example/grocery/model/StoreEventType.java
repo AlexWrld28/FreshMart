@@ -1,0 +1,12 @@
+package org.example.grocery.model;
+
+public enum StoreEventType {
+    SIMULATION_STARTED,
+    CUSTOMER_ARRIVED,
+    BASKET_RESERVED,
+    OUT_OF_STOCK,
+    QUEUED_FOR_CHECKOUT,
+    CHECKOUT_STARTED,
+    CHECKOUT_COMPLETED,
+    SIMULATION_FINISHED
+}
