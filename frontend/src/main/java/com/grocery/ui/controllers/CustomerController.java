@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class CustomerController {
 
@@ -51,6 +52,8 @@ public class CustomerController {
     @FXML private TableColumn<JsonNode, String> colAIName, colAIQty, colAIMatch, colAIPrice, colAIAction;
     @FXML private TextField aiPromptField;
     @FXML private Label aiStatusLabel;
+    @FXML private ComboBox<String> dietaryFilter;
+    @FXML private TextField budgetField;
 
     private ObservableList<JsonNode> allProducts = FXCollections.observableArrayList();
     private final ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
@@ -87,6 +90,10 @@ public class CustomerController {
         setupOrdersTable();
         setupCartTable();
         setupAITable();
+        dietaryFilter.setItems(FXCollections.observableArrayList(
+                "None", "Vegan", "Vegetarian", "Gluten-Free", "Dairy-Free", "Halal", "Kosher"
+        ));
+        dietaryFilter.setValue("None");
         loadProducts();
         setupCategories();
         cartBadge.setVisible(false);

@@ -108,6 +108,8 @@
                 <HBox spacing="12" alignment="CENTER_LEFT">
                     <TextField fx:id="aiPromptField" promptText="e.g. I want to make tacos for 4 people"
                                styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="dietaryFilter" promptText="Dietary Filter" styleClass="combo-field"/>
+                    <TextField fx:id="budgetField" promptText="Budget ($)" styleClass="search-field" prefWidth="100"/>
                     <Button text="Generate List" onAction="#handleGenerateList" styleClass="btn-primary"/>
                 </HBox>
                 <Label fx:id="aiStatusLabel" styleClass="field-label" wrapText="true"/>
