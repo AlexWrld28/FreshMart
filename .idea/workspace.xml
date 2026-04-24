@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/OrderItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/grocery.db" beforeDir="false" afterPath="$PROJECT_DIR$/backend/grocery.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/PurchaseRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/PurchaseRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/Order.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CartItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CartItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "dunn7"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AlexWrld28/FreshMart.git",
+    "accountId": "b05f696e-aab8-4cfc-92a6-fc4403bcafeb"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="3CmObQ4Nm9kQUNKNliKv6QqD3Qr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainApp.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.GroceryApplication.executor": "Run",
+    "git-widget-placeholder": "feature-receipts",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ]
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="GroceryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="grocery-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.grocery.GroceryApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-84258761d1cc-intellij.indexing.shared.core-IU-243.28141.18" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.28141.18" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="" />
+      <created>1776987350578</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776987350578</updated>
+      <workItem from="1776987352074" duration="10034000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -70,8 +70,24 @@ public class AdminController {
                                     TableColumn<JsonNode, String> statusCol, TableColumn<JsonNode, String> dateCol,
                                     TableView<JsonNode> table) {
         custCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("userFullName").asText()));
-        prodCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        qtyCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
+
+        prodCol.setText("Receipt #");
+        qtyCol.setText("Items");
+
+        prodCol.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        qtyCol.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+
+            if (!items.isArray()) {
+                return new SimpleStringProperty("0");
+            }
+
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
         totalCol.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
         statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
         dateCol.setCellValueFactory(d -> {
@@ -83,6 +99,54 @@ public class AdminController {
                 return new SimpleStringProperty(raw);
             }
         });
+
+        table.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showReceiptDetails(row.getItem());
+                }
+            });
+
+            return row;
+        });
+
+    }
+
+    private void showReceiptDetails(JsonNode order) {
+        StringBuilder details = new StringBuilder();
+
+        details.append("Customer: ")
+                .append(order.path("userFullName").asText())
+                .append("\n\n");
+
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                String name = item.path("productName").asText();
+                int quantity = item.path("quantity").asInt();
+                double priceEach = item.path("priceEach").asDouble();
+                double totalPrice = item.path("totalPrice").asDouble();
+
+                details.append(name)
+                        .append("\n")
+                        .append("Qty: ").append(quantity)
+                        .append(" | Each: $").append(String.format("%.2f", priceEach))
+                        .append(" | Total: $").append(String.format("%.2f", totalPrice))
+                        .append("\n\n");
+            }
+        }
+
+        details.append("Order Total: $")
+                .append(String.format("%.2f", order.path("totalPrice").asDouble()));
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Receipt Details");
+        alert.setHeaderText("Receipt #" + order.path("id").asText());
+        alert.setContentText(details.toString());
+        alert.showAndWait();
     }
 
     private void setupProductsTable() {

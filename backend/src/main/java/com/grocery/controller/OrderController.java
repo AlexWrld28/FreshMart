@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import com.grocery.dto.PurchaseItemRequest;
+import com.grocery.model.OrderItem;
+import java.util. ArrayList;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -40,39 +43,84 @@ public class OrderController {
 
     @PostMapping("/purchase")
     public ResponseEntity<?> purchase(@RequestBody PurchaseRequest request) {
-        Optional<User> userOpt = userRepository.findById(request.getUserId());
-        Optional<Product> productOpt = productRepository.findById(request.getProductId());
 
-        if (userOpt.isEmpty()) return ResponseEntity.badRequest().body(Map.of("message", "User not found"));
-        if (productOpt.isEmpty()) return ResponseEntity.badRequest().body(Map.of("message", "Product not found"));
+
+        System.out.println("Request items: " + request.getItems());
+
+        Optional<User> userOpt = userRepository.findById(request.getUserId());
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "User not found"));
+        }
+
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Product not found"));
+        }
 
         User user = userOpt.get();
-        Product product = productOpt.get();
 
-        if (product.getQuantity() < request.getQuantity()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Not enough stock available"));
-        }
-
-        double total = product.getPrice() * request.getQuantity();
-
-        if (user.getBalance() < total) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Insufficient balance. You need $" + String.format("%.2f", total) + " but have $" + String.format("%.2f", user.getBalance())));
-        }
-
-        user.setBalance(user.getBalance() - total);
-        userRepository.save(user);
-
-        product.setQuantity(product.getQuantity() - request.getQuantity());
-        productRepository.save(product);
+        double orderTotal = 0.0;
 
         Order order = new Order();
         order.setUserId(user.getId());
         order.setUserFullName(user.getFullName());
-        order.setProductId(product.getId());
-        order.setProductName(product.getName());
-        order.setQuantity(request.getQuantity());
-        order.setTotalPrice(total);
         order.setStatus("Confirmed");
+        order.setItems(new ArrayList<>());
+
+
+        for(PurchaseItemRequest itemRequest : request.getItems()){
+
+            System.out.println("PRODUCT ID = " + itemRequest.getProductId());
+            System.out.println("QUANTITY = " + itemRequest.getQuantity());
+
+
+            Optional<Product> productOpt = productRepository.findById(itemRequest.getProductId());
+
+            if (productOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Product not found"));
+            }
+
+            Product product = productOpt.get();
+
+            if (product.getQuantity() < itemRequest.getQuantity()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "message", "Not enough stock available for " + product.getName()
+                ));
+            }
+
+            double itemTotal = product.getPrice() * itemRequest.getQuantity();
+            orderTotal += itemTotal;
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProductId(product.getId());
+            orderItem.setProductName(product.getName());
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItem.setPriceEach(product.getPrice());
+            orderItem.setTotalPrice(itemTotal);
+
+            order.getItems().add(orderItem);
+        }
+
+        if (user.getBalance() < orderTotal) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Insufficient balance. You need $" +
+                            String.format("%.2f", orderTotal) +
+                            " but have $" +
+                            String.format("%.2f", user.getBalance())
+            ));
+        }
+
+        user.setBalance(user.getBalance() - orderTotal);
+        userRepository.save(user);
+
+        for (PurchaseItemRequest itemRequest : request.getItems()) {
+            Product product = productRepository.findById(itemRequest.getProductId()).get();
+            product.setQuantity(product.getQuantity() - itemRequest.getQuantity());
+            productRepository.save(product);
+        }
+
+        order.setTotalPrice(orderTotal);
         orderRepository.save(order);
 
         return ResponseEntity.ok(Map.of(

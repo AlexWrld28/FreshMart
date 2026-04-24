@@ -1,14 +1,30 @@
 package com.grocery.dto;
 
-public class PurchaseRequest {
-    private Long userId;
-    private Long productId;
-    private int quantity;
+import java.util.List;
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    public Long getProductId() { return productId; }
-    public void setProductId(Long productId) { this.productId = productId; }
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+public class PurchaseRequest {
+
+    private Long userId;
+    private List<PurchaseItemRequest> items;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public List<PurchaseItemRequest> getItems() {
+        return items;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setItems(List<PurchaseItemRequest> items) {
+        this.items = items;
+    }
 }
+
+
+
+
+

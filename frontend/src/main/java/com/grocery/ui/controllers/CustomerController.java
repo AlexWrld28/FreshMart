@@ -9,14 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -219,10 +212,32 @@ public class CustomerController {
     }
 
     private void setupOrdersTable() {
-        colOrdProduct.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        colOrdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
-        colOrdTotal.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
-        colOrdStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
+        colOrdProduct.setText("Receipt #");
+        colOrdQty.setText("Items");
+
+        colOrdProduct.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        colOrdQty.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+
+            if (!items.isArray()) {
+                return new SimpleStringProperty("0");
+            }
+
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
+        colOrdTotal.setCellValueFactory(d ->
+                new SimpleStringProperty("$" + String.format("%.2f",
+                        d.getValue().path("totalPrice").asDouble()))
+        );
+
+        colOrdStatus.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().path("status").asText())
+        );
+
         colOrdDate.setCellValueFactory(d -> {
             String raw = d.getValue().path("createdAt").asText();
             try {
@@ -231,6 +246,18 @@ public class CustomerController {
             } catch (Exception e) {
                 return new SimpleStringProperty(raw);
             }
+        });
+
+        ordersTable.setRowFactory(tv -> {
+                    TableRow<JsonNode> row = new TableRow<>();
+
+                    row.setOnMouseClicked(event -> {
+                        if (event.getClickCount() == 2 && !row.isEmpty()) {
+                            showReceiptDetails(row.getItem());
+                        }
+                    });
+
+                    return row;
         });
     }
 
@@ -298,12 +325,24 @@ public class CustomerController {
         List<CartItem> snapshot = new ArrayList<>(cartItems);
         new Thread(() -> {
             try {
+                List<Map<String, Object>> itemsList = new ArrayList<>();
+
                 for (CartItem item : snapshot) {
-                    ApiService.postWithStatus("/orders/purchase", Map.of(
-                            "userId", SessionManager.getUserId(),
+                    itemsList.add(Map.of(
                             "productId", item.getProductId(),
-                            "quantity", item.getQuantity()));
+                            "quantity", item.getQuantity()
+                    ));
                 }
+
+                Map<String, Object> requestBody = Map.of(
+                        "userId", SessionManager.getUserId(),
+                        "items", itemsList
+                );
+
+                System.out.println("CHECKOUT REQUEST BODY = " + requestBody);
+
+                ApiService.postWithStatus("/orders/purchase", requestBody);
+
                 JsonNode userNode = ApiService.get("/users/" + SessionManager.getUserId());
                 double newBalance = userNode.path("balance").asDouble();
                 SessionManager.setBalance(newBalance);
@@ -380,6 +419,41 @@ public class CustomerController {
                 Platform.runLater(() -> ordersTable.setItems(list));
             } catch (Exception ignored) {}
         }).start();
+    }
+
+    private void showReceiptDetails(JsonNode order) {
+        StringBuilder details = new StringBuilder();
+
+        details.append("Receipt #")
+                .append(order.path("id").asText())
+                .append("\n\n");
+
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                String name = item.path("productName").asText();
+                int quantity = item.path("quantity").asInt();
+                double priceEach = item.path("priceEach").asDouble();
+                double totalPrice = item.path("totalPrice").asDouble();
+
+                details.append(name)
+                        .append("\n")
+                        .append("Qty: ").append(quantity)
+                        .append(" | Each: $").append(String.format("%.2f", priceEach))
+                        .append(" | Total: $").append(String.format("%.2f", totalPrice))
+                        .append("\n\n");
+            }
+        }
+
+        details.append("Order Total: $")
+                .append(String.format("%.2f", order.path("totalPrice").asDouble()));
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Receipt Details");
+        alert.setHeaderText("Receipt #" + order.path("id").asText());
+        alert.setContentText(details.toString());
+        alert.showAndWait();
     }
 
     @FXML
