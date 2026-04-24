@@ -1,5 +1,8 @@
 package com.grocery.ui.controllers;
 
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.TableRow;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.grocery.ui.MainApp;
 import com.grocery.ui.services.ApiService;
@@ -83,25 +86,69 @@ public class AdminController {
     }
 
     private void setupProductsTable() {
+
+        productsTable.setEditable(true);
+
         colProdName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("name").asText()));
         colProdCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("category").asText()));
         colProdPrice.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("price").asDouble())));
-        colProdQty.setCellValueFactory(d -> {
-            int qty = d.getValue().path("quantity").asInt();
-            return new SimpleStringProperty(qty <= 5 ? qty + " (Low)" : String.valueOf(qty));
-        });
+        colProdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
         colProdDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("description").asText()));
+
+        colProdName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdPrice.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdQty.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdDesc.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        colProdName.setOnEditCommit(e -> updateField(e.getRowValue(), "name", e.getNewValue()));
+        colProdCategory.setOnEditCommit(e -> updateField(e.getRowValue(), "category", e.getNewValue()));
+
+        colProdPrice.setOnEditCommit(e -> {
+            try {
+                String val = e.getNewValue().replace("$", "");
+                double price = Double.parseDouble(val);
+                updateField(e.getRowValue(), "price", price);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid price");
+            }
+        });
+
+        colProdQty.setOnEditCommit(e -> {
+            try {
+                int qty = Integer.parseInt(e.getNewValue());
+                updateField(e.getRowValue(), "quantity", qty);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid quantity");
+            }
+        });
+
+        colProdDesc.setOnEditCommit(e -> updateField(e.getRowValue(), "description", e.getNewValue()));
+
+        productsTable.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    productsTable.edit(row.getIndex(), colProdName);
+                }
+            });
+            return row;
+        });
+
         colProdActions.setCellFactory(col -> new TableCell<>() {
             private final Button editBtn = new Button("Edit");
             private final Button delBtn = new Button("Delete");
             private final HBox box = new HBox(6, editBtn, delBtn);
+
             {
                 editBtn.getStyleClass().add("btn-edit");
                 delBtn.getStyleClass().add("btn-delete");
+
                 editBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         showProductDialog(getTableView().getItems().get(getIndex()));
                 });
+
                 delBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         deleteProduct(getTableView().getItems().get(getIndex()).get("id").asLong());
@@ -385,4 +432,26 @@ public class AdminController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+    private void updateField(JsonNode product, String field, Object value) {
+
+        long id = product.get("id").asLong();
+
+        Map<String, Object> body = Map.of(
+                "name", field.equals("name") ? value : product.get("name").asText(),
+                "category", field.equals("category") ? value : product.get("category").asText(),
+                "price", field.equals("price") ? value : product.get("price").asDouble(),
+                "quantity", field.equals("quantity") ? value : product.get("quantity").asInt(),
+                "description", field.equals("description") ? value : product.get("description").asText()
+        );
+
+        new Thread(() -> {
+            try {
+                ApiService.put("/products/" + id, body);
+                Platform.runLater(this::loadAllData);
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Update failed"));
+            }
+        }).start();
+    }
+
 }
