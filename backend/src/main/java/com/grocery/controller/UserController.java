@@ -55,15 +55,20 @@ public class UserController {
 
     @PostMapping("/topup")
     public ResponseEntity<?> topUp(@RequestBody TopUpRequest request) {
-        Optional<User> userOpt = userRepository.findById(request.getUserId());
-        if (userOpt.isEmpty()) return ResponseEntity.notFound().build();
-        User user = userOpt.get();
         if (request.getAmount() <= 0) {
             return ResponseEntity.badRequest().body(Map.of("message", "Amount must be greater than zero"));
         }
-        user.setBalance(user.getBalance() + request.getAmount());
-        userRepository.save(user);
-        return ResponseEntity.ok(Map.of("balance", user.getBalance()));
+        if (request.getUserId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "User not found"));
+        }
+
+        int updatedRows = userRepository.incrementBalance(request.getUserId(), request.getAmount());
+        if (updatedRows == 0) return ResponseEntity.notFound().build();
+
+        double newBalance = userRepository.findById(request.getUserId())
+                .map(User::getBalance)
+                .orElseThrow(() -> new IllegalStateException("User disappeared after balance update"));
+        return ResponseEntity.ok(Map.of("balance", newBalance));
     }
 
     @PutMapping("/{id}")
