@@ -31,7 +31,25 @@ public class AIService {
         this.productRepository = productRepository;
     }
 
-    public List<Map<String, Object>> generateGroceryList(String userPrompt) throws Exception {
+    public List<Map<String, Object>> generateGroceryList(String userPrompt, String dietaryFilter, Double budget) throws Exception {
+
+        String dietaryNote = (dietaryFilter != null && !dietaryFilter.equals("None"))
+                ? "IMPORTANT: This is a strict " + dietaryFilter + " grocery list. Do NOT include any " +
+                switch (dietaryFilter) {
+                    case "Vegan" -> "meat, poultry, seafood, dairy, or eggs.";
+                    case "Vegetarian" -> "meat, poultry, or seafood.";
+                    case "Gluten-Free" -> "wheat, barley, rye, or gluten-containing products.";
+                    case "Dairy-Free" -> "milk, cheese, butter, yogurt, or any dairy products.";
+                    case "Halal" -> "pork or non-halal meat products.";
+                    case "Kosher" -> "pork, shellfish, or mixing of meat and dairy.";
+                    default -> "non-" + dietaryFilter + " items.";
+                }
+                : "";
+
+        String budgetNote = (budget != null && budget > 0)
+                ? "The total estimated cost must fit within a $" + budget + " budget. Adjust quantities accordingly."
+                : "";
+
         String fullPrompt = """
             You are a grocery list assistant for a store called FreshMart.
             When the user describes a meal or need, respond ONLY with a JSON array.
@@ -41,7 +59,8 @@ public class AIService {
               {"name": "tortillas", "quantity": "1 pack", "category": "Pantry"}
             ]
             Use only these categories: Produce, Dairy, Meat, Seafood, Bakery, Frozen, Beverages, Pantry.
-            User request: """ + userPrompt;
+            """ + dietaryNote + "\n" + budgetNote + """
+            \nUser request: """ + userPrompt;
 
         Map<String, Object> requestBody = Map.of(
                 "contents", List.of(
@@ -74,6 +93,8 @@ public class AIService {
         JsonNode items = objectMapper.readTree(content);
 
         List<Map<String, Object>> result = new ArrayList<>();
+        double runningTotal = 0;
+
         for (JsonNode item : items) {
             String name = item.path("name").asText();
             String quantity = item.path("quantity").asText();
@@ -95,6 +116,11 @@ public class AIService {
                         .min(Comparator.comparingDouble(Product::getPrice))
                         .orElse(matches.get(0));
 
+                if (budget != null && budget > 0 && runningTotal + cheapest.getPrice() > budget) {
+                    continue;
+                }
+
+                runningTotal += cheapest.getPrice();
                 entry.put("matchedProductId", cheapest.getId());
                 entry.put("matchedProductName", cheapest.getName());
                 entry.put("price", cheapest.getPrice());

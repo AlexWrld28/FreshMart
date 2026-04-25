@@ -19,13 +19,17 @@ public class AIController {
     }
 
     @PostMapping("/grocery-list")
-    public ResponseEntity<?> generateList(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> generateList(@RequestBody Map<String, Object> body) {
         try {
-            String prompt = body.get("prompt");
+            String prompt = (String) body.get("prompt");
+            String dietaryFilter = (String) body.getOrDefault("dietaryFilter", "None");
+            Double budget = body.get("budget") != null ? Double.parseDouble(body.get("budget").toString()) : null;
+
             if (prompt == null || prompt.isBlank()) {
                 return ResponseEntity.badRequest().body("Prompt is required");
             }
-            List<Map<String, Object>> list = aiService.generateGroceryList(prompt);
+
+            List<Map<String, Object>> list = aiService.generateGroceryList(prompt, dietaryFilter, budget);
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());

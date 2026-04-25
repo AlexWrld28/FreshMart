@@ -294,13 +294,31 @@ public class CustomerController {
             aiStatusLabel.setText("Please enter what you want to make or buy.");
             return;
         }
+
+        String dietary = dietaryFilter.getValue() != null ? dietaryFilter.getValue() : "None";
+        String budgetText = budgetField.getText().trim();
+        Double budget = null;
+        if (!budgetText.isBlank()) {
+            try {
+                budget = Double.parseDouble(budgetText);
+            } catch (NumberFormatException e) {
+                aiStatusLabel.setText("Please enter a valid budget amount.");
+                return;
+            }
+        }
+
         aiStatusLabel.setText("Generating your grocery list...");
         aiResultTable.getItems().clear();
 
+        final Double finalBudget = budget;
         new Thread(() -> {
             try {
-                JsonNode result = ApiService.postAI("/ai/grocery-list",
-                        Map.of("prompt", prompt));
+                Map<String, Object> requestBody = new HashMap<>();
+                requestBody.put("prompt", prompt);
+                requestBody.put("dietaryFilter", dietary);
+                if (finalBudget != null) requestBody.put("budget", finalBudget);
+
+                JsonNode result = ApiService.postAI("/ai/grocery-list",requestBody);
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 result.forEach(list::add);
                 Platform.runLater(() -> {
