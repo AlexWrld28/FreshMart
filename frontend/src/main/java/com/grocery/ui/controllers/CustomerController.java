@@ -125,9 +125,9 @@ public class CustomerController {
         imagePlaceholder.getStyleClass().add("product-image-placeholder");
         imagePlaceholder.setPrefSize(160, 120);
         imagePlaceholder.setAlignment(javafx.geometry.Pos.CENTER);
-        Label emoji = new Label("🛒");
-        emoji.setStyle("-fx-font-size: 40px;");
-        imagePlaceholder.getChildren().add(emoji);
+        Label placeHolder = new Label("Image");
+        placeHolder.setStyle("-fx-font-size: 40px;");
+        imagePlaceholder.getChildren().add(placeHolder);
 
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add("product-card-name");
