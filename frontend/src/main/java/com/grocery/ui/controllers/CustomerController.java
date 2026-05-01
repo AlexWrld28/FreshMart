@@ -275,7 +275,7 @@ public class CustomerController {
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
         if (cat == null || cat.equals("All")) {
-            buildProductGrid(filtered);// refactoring all shopTables to productGrid
+            buildProductGrid(allProducts);// refactoring all shopTables to productGrid
         } else {
             ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
             allProducts.forEach(p -> {
