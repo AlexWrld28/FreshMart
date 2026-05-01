@@ -20,9 +20,13 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
+
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+
+
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail().toLowerCase().trim());
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(401).body(Map.of("message", "Invalid email or password"));
         }
@@ -44,7 +48,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User newUser) {
-        if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
+        if (newUser.getConfirmPassword() != null && !newUser.getPassword().equals(newUser.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Passwords do not match"));
+        }
+        if (userRepository.findByEmail(newUser.getEmail().toLowerCase().trim()).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Email already in use"));
         }
         newUser.setRole("CUSTOMER");

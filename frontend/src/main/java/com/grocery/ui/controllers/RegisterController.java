@@ -19,6 +19,7 @@ public class RegisterController {
     @FXML private TextField nameField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+    @FXML private PasswordField confirmPasswordField;
     @FXML private Label errorLabel;
 
     @FXML
@@ -26,16 +27,21 @@ public class RegisterController {
         String name = nameField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
+        String confirmPassword = confirmPasswordField.getText().trim();
 
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             errorLabel.setText("All fields are required.");
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            errorLabel.setText("Passwords do not match.");
             return;
         }
 
         new Thread(() -> {
             try {
                 JsonNode response = ApiService.postWithStatus("/auth/register",
-                        Map.of("fullName", name, "email", email, "password", password));
+                        Map.of("fullName", name, "email", email, "password", password,"confirmPassword", confirmPassword));
 
                 long id = response.get("id").asLong();
                 String role = response.get("role").asText();

@@ -36,6 +36,10 @@
                     <Label text="Password" styleClass="field-label"/>
                     <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
                 </VBox>
+                <VBox spacing="6">
+                    <Label text="Confirm Password" styleClass="field-label"/>
+                    <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" styleClass="login-field"/>
+                </VBox>
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
                 <Button text="Create Account" onAction="#handleRegister" styleClass="btn-primary" maxWidth="Infinity"/>
                 <Separator/>
