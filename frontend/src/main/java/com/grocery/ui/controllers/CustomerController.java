@@ -9,9 +9,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomerController {
+
+    @FXML private StackPane rootStack;
 
     @FXML private Label welcomeLabel, balanceLabel;
     @FXML private VBox shopPane, ordersPane, walletPane, cartPane;
@@ -422,38 +430,69 @@ public class CustomerController {
     }
 
     private void showReceiptDetails(JsonNode order) {
-        StringBuilder details = new StringBuilder();
 
-        details.append("Receipt #")
-                .append(order.path("id").asText())
-                .append("\n\n");
+        // Dark background overlay
+        VBox overlay = new VBox();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+        overlay.setAlignment(Pos.CENTER);
+
+        // Receipt card
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(20));
+        card.setMaxWidth(400);
+        card.getStyleClass().add("card");
+
+        Label title = new Label("Receipt #" + order.path("id").asText());
+        title.getStyleClass().add("page-title");
+
+        Label subtitle = new Label("Order Details");
+        subtitle.getStyleClass().add("stat-label");
+
+        VBox itemsBox = new VBox(10);
 
         JsonNode items = order.path("items");
 
         if (items.isArray()) {
             for (JsonNode item : items) {
-                String name = item.path("productName").asText();
-                int quantity = item.path("quantity").asInt();
-                double priceEach = item.path("priceEach").asDouble();
-                double totalPrice = item.path("totalPrice").asDouble();
+                VBox itemBox = new VBox(4);
+                itemBox.getStyleClass().add("stat-card");
 
-                details.append(name)
-                        .append("\n")
-                        .append("Qty: ").append(quantity)
-                        .append(" | Each: $").append(String.format("%.2f", priceEach))
-                        .append(" | Total: $").append(String.format("%.2f", totalPrice))
-                        .append("\n\n");
+                Label nameLabel = new Label(item.path("productName").asText());
+                nameLabel.getStyleClass().add("section-title");
+
+                Label detailsLabel = new Label(
+                        "Qty: " + item.path("quantity").asInt()
+                        + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                        + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                );
+                detailsLabel.getStyleClass().add("stat-label");
+
+                itemBox.getChildren().addAll(nameLabel, detailsLabel);
+
+                itemsBox.getChildren().add(itemBox);
             }
         }
 
-        details.append("Order Total: $")
-                .append(String.format("%.2f", order.path("totalPrice").asDouble()));
+        Label total = new Label("Total: $" +
+                String.format("%.2f", order.path("totalPrice").asDouble()));
+        total.getStyleClass().add("stat-value-green");
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Receipt Details");
-        alert.setHeaderText("Receipt #" + order.path("id").asText());
-        alert.setContentText(details.toString());
-        alert.showAndWait();
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-primary");
+        closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
+
+        card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
+
+        overlay.getChildren().add(card);
+
+        // Click outside to close
+        overlay.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlay) {
+                rootStack.getChildren().remove(overlay);
+            }
+        });
+
+        rootStack.getChildren().add(overlay);
     }
 
     @FXML
