@@ -9,6 +9,7 @@ import com.grocery.repository.ProductRepository;
 import com.grocery.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,18 @@ public class OrderController {
 
     @PostMapping("/purchase")
     public ResponseEntity<?> purchase(@RequestBody PurchaseRequest request) {
+        String backendThread = Thread.currentThread().getName();
+        String requestedProductName = request.getProductName() == null ? "(not supplied)" : request.getProductName();
+        System.out.printf(
+            "[thread-receipt] BACKEND RECEIVED checkoutId=%s purchaseTraceId=%s productId=%d requestedProduct=%s quantity=%d thread=%s%n",
+            request.getCheckoutId(),
+            request.getPurchaseTraceId(),
+            request.getProductId(),
+            requestedProductName,
+            request.getQuantity(),
+            backendThread
+        );
+
         Optional<User> userOpt = userRepository.findById(request.getUserId());
         Optional<Product> productOpt = productRepository.findById(request.getProductId());
 
@@ -75,11 +88,30 @@ public class OrderController {
         order.setStatus("Confirmed");
         orderRepository.save(order);
 
-        return ResponseEntity.ok(Map.of(
-            "message", "Purchase successful",
-            "newBalance", user.getBalance(),
-            "orderId", order.getId()
-        ));
+        System.out.printf(
+            "[thread-receipt] BACKEND SAVED    checkoutId=%s purchaseTraceId=%s orderId=%d product=%s quantity=%d total=$%.2f thread=%s%n",
+            request.getCheckoutId(),
+            request.getPurchaseTraceId(),
+            order.getId(),
+            product.getName(),
+            request.getQuantity(),
+            total,
+            backendThread
+        );
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("message", "Purchase successful");
+        response.put("newBalance", user.getBalance());
+        response.put("orderId", order.getId());
+        response.put("checkoutId", request.getCheckoutId());
+        response.put("purchaseTraceId", request.getPurchaseTraceId());
+        response.put("backendThread", backendThread);
+        response.put("productId", product.getId());
+        response.put("productName", product.getName());
+        response.put("quantity", request.getQuantity());
+        response.put("totalPrice", total);
+        response.put("savedToBackend", true);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/revenue")
