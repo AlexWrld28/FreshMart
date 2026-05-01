@@ -28,6 +28,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.stage.FileChooser;
+import javafx.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
 public class AdminController {
 
     @FXML private Label welcomeLabel;
@@ -254,6 +261,16 @@ public class AdminController {
         TextField descF = new TextField(product == null ? "" : product.path("description").asText());
         descF.setPromptText("Description");
         descF.getStyleClass().add("login-field");
+
+        /**
+         * Implementing and testing ImagePath @jomarLub17
+         */
+
+        TextField imageF = new TextField(product == null ? "" : product.path("imagePath").asText());
+        imageF.setPromptText("No image selected");
+        imageF.getStyleClass().add("login-field");
+        imageF.setEditable(false);
+
 
         form.getChildren().addAll(
             fieldLabel("Name"), nameF,
