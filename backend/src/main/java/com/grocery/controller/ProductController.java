@@ -56,8 +56,9 @@ public class ProductController {
         product.setPrice(updated.getPrice());
         product.setQuantity(updated.getQuantity());
         product.setDescription(updated.getDescription());
-        return ResponseEntity.ok(productRepository.save(product));
         product.setImagePath(updated.getImagePath()); // ImagePath
+        return ResponseEntity.ok(productRepository.save(product));
+
     }
 
     @DeleteMapping("/{id}")

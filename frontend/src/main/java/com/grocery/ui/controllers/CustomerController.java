@@ -121,13 +121,32 @@ public class CustomerController {
         int stock = product.path("quantity").asInt();
         boolean outOfStock = stock == 0;
 
-        VBox imagePlaceholder = new VBox();
+        javafx.scene.layout.StackPane imagePlaceholder = new javafx.scene.layout.StackPane();
         imagePlaceholder.getStyleClass().add("product-image-placeholder");
         imagePlaceholder.setPrefSize(160, 120);
-        imagePlaceholder.setAlignment(javafx.geometry.Pos.CENTER);
-        Label placeHolder = new Label("Image");
-        placeHolder.setStyle("-fx-font-size: 40px;");
-        imagePlaceholder.getChildren().add(placeHolder);
+
+        String imagePath = product.path("imagePath").asText();
+        if (!imagePath.isEmpty()) {
+            try {
+                java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
+                if (imgUrl != null) {
+                    javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(
+                            new javafx.scene.image.Image(imgUrl.toExternalForm())
+                    );
+                    imageView.setFitWidth(160);
+                    imageView.setFitHeight(120);
+                    imageView.setPreserveRatio(true);
+                    imagePlaceholder.getChildren().add(imageView);
+                } else {
+                    addEmojiPlaceholder(imagePlaceholder);
+                }
+            } catch (Exception e) {
+                addEmojiPlaceholder(imagePlaceholder);
+            }
+        } else {
+            addEmojiPlaceholder(imagePlaceholder);
+        }
+
 
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add("product-card-name");
@@ -152,6 +171,12 @@ public class CustomerController {
         card.getStyleClass().add("product-card");
         card.setPrefWidth(180);
         return card;
+    }
+
+    private void addEmojiPlaceholder(javafx.scene.layout.StackPane pane) {
+        Label emoji = new Label("🥬");
+        emoji.setStyle("-fx-font-size: 40px;");
+        pane.getChildren().add(emoji);
     }
 
     private void addToCart(JsonNode product) {
