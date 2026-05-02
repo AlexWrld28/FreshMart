@@ -1,7 +1,8 @@
 package com.grocery.ui.controllers;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.control.TableRow;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.grocery.ui.MainApp;
@@ -13,17 +14,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDateTime;
@@ -32,6 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AdminController {
+
+    @FXML private StackPane rootStack;
 
     @FXML private Label welcomeLabel;
     @FXML private VBox dashboardPane, productsPane, customersPane, ordersPane;
@@ -115,38 +109,65 @@ public class AdminController {
     }
 
     private void showReceiptDetails(JsonNode order) {
-        StringBuilder details = new StringBuilder();
+        VBox overlay = new VBox();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+        overlay.setAlignment(Pos.CENTER);
 
-        details.append("Customer: ")
-                .append(order.path("userFullName").asText())
-                .append("\n\n");
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(20));
+        card.setMaxWidth(500);
+        card.getStyleClass().add("card");
+
+        Label title = new Label("Receipt #" + order.path("id").asText());
+        title.getStyleClass().add("page-title");
+
+        Label subtitle = new Label("Order Details");
+        subtitle.getStyleClass().add("stat-label");
+
+        VBox itemsBox = new VBox(10);
 
         JsonNode items = order.path("items");
 
         if (items.isArray()) {
             for (JsonNode item : items) {
-                String name = item.path("productName").asText();
-                int quantity = item.path("quantity").asInt();
-                double priceEach = item.path("priceEach").asDouble();
-                double totalPrice = item.path("totalPrice").asDouble();
+                VBox itemBox = new VBox(6);
+                itemBox.getStyleClass().add("stat-card");
 
-                details.append(name)
-                        .append("\n")
-                        .append("Qty: ").append(quantity)
-                        .append(" | Each: $").append(String.format("%.2f", priceEach))
-                        .append(" | Total: $").append(String.format("%.2f", totalPrice))
-                        .append("\n\n");
+                Label nameLabel = new Label(item.path("productName").asText());
+                nameLabel.getStyleClass().add("section-title");
+                nameLabel.setWrapText(true);
+
+                Label detailsLabel = new Label(
+                        "Qty: " + item.path("quantity").asInt()
+                                + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                                + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                );
+                detailsLabel.getStyleClass().add("stat-label");
+
+                itemBox.getChildren().addAll(nameLabel, detailsLabel);
+                itemsBox.getChildren().add(itemBox);
             }
         }
 
-        details.append("Order Total: $")
-                .append(String.format("%.2f", order.path("totalPrice").asDouble()));
+        Label total = new Label("Total: $" +
+                String.format("%.2f", order.path("totalPrice").asDouble()));
+        total.getStyleClass().add("stat-value-green");
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Receipt Details");
-        alert.setHeaderText("Receipt #" + order.path("id").asText());
-        alert.setContentText(details.toString());
-        alert.showAndWait();
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-primary");
+        closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
+
+        card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
+
+        overlay.getChildren().add(card);
+
+        overlay.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlay) {
+                rootStack.getChildren().remove(overlay);
+            }
+        });
+
+        rootStack.getChildren().add(overlay);
     }
 
     private void setupProductsTable() {
