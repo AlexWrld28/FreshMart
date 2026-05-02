@@ -1,5 +1,8 @@
 package com.grocery.ui.controllers;
 
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.TableRow;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.grocery.ui.MainApp;
 import com.grocery.ui.services.ApiService;
@@ -67,8 +70,24 @@ public class AdminController {
                                     TableColumn<JsonNode, String> statusCol, TableColumn<JsonNode, String> dateCol,
                                     TableView<JsonNode> table) {
         custCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("userFullName").asText()));
-        prodCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        qtyCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
+
+        prodCol.setText("Receipt #");
+        qtyCol.setText("Items");
+
+        prodCol.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        qtyCol.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+
+            if (!items.isArray()) {
+                return new SimpleStringProperty("0");
+            }
+
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
         totalCol.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
         statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
         dateCol.setCellValueFactory(d -> {
@@ -80,28 +99,120 @@ public class AdminController {
                 return new SimpleStringProperty(raw);
             }
         });
+
+        table.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showReceiptDetails(row.getItem());
+                }
+            });
+
+            return row;
+        });
+
+    }
+
+    private void showReceiptDetails(JsonNode order) {
+        StringBuilder details = new StringBuilder();
+
+        details.append("Customer: ")
+                .append(order.path("userFullName").asText())
+                .append("\n\n");
+
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                String name = item.path("productName").asText();
+                int quantity = item.path("quantity").asInt();
+                double priceEach = item.path("priceEach").asDouble();
+                double totalPrice = item.path("totalPrice").asDouble();
+
+                details.append(name)
+                        .append("\n")
+                        .append("Qty: ").append(quantity)
+                        .append(" | Each: $").append(String.format("%.2f", priceEach))
+                        .append(" | Total: $").append(String.format("%.2f", totalPrice))
+                        .append("\n\n");
+            }
+        }
+
+        details.append("Order Total: $")
+                .append(String.format("%.2f", order.path("totalPrice").asDouble()));
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Receipt Details");
+        alert.setHeaderText("Receipt #" + order.path("id").asText());
+        alert.setContentText(details.toString());
+        alert.showAndWait();
     }
 
     private void setupProductsTable() {
+
+        productsTable.setEditable(true);
+
         colProdName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("name").asText()));
         colProdCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("category").asText()));
         colProdPrice.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("price").asDouble())));
-        colProdQty.setCellValueFactory(d -> {
-            int qty = d.getValue().path("quantity").asInt();
-            return new SimpleStringProperty(qty <= 5 ? qty + " (Low)" : String.valueOf(qty));
-        });
+        colProdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
         colProdDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("description").asText()));
+
+        colProdName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdPrice.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdQty.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdDesc.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        colProdName.setOnEditCommit(e -> updateField(e.getRowValue(), "name", e.getNewValue()));
+        colProdCategory.setOnEditCommit(e -> updateField(e.getRowValue(), "category", e.getNewValue()));
+
+        colProdPrice.setOnEditCommit(e -> {
+            try {
+                String val = e.getNewValue().replace("$", "");
+                double price = Double.parseDouble(val);
+                updateField(e.getRowValue(), "price", price);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid price");
+            }
+        });
+
+        colProdQty.setOnEditCommit(e -> {
+            try {
+                int qty = Integer.parseInt(e.getNewValue());
+                updateField(e.getRowValue(), "quantity", qty);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid quantity");
+            }
+        });
+
+        colProdDesc.setOnEditCommit(e -> updateField(e.getRowValue(), "description", e.getNewValue()));
+
+        productsTable.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    productsTable.edit(row.getIndex(), colProdName);
+                }
+            });
+            return row;
+        });
+
         colProdActions.setCellFactory(col -> new TableCell<>() {
             private final Button editBtn = new Button("Edit");
             private final Button delBtn = new Button("Delete");
             private final HBox box = new HBox(6, editBtn, delBtn);
+
             {
                 editBtn.getStyleClass().add("btn-edit");
                 delBtn.getStyleClass().add("btn-delete");
+
                 editBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         showProductDialog(getTableView().getItems().get(getIndex()));
                 });
+
                 delBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         deleteProduct(getTableView().getItems().get(getIndex()).get("id").asLong());
@@ -385,4 +496,26 @@ public class AdminController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+    private void updateField(JsonNode product, String field, Object value) {
+
+        long id = product.get("id").asLong();
+
+        Map<String, Object> body = Map.of(
+                "name", field.equals("name") ? value : product.get("name").asText(),
+                "category", field.equals("category") ? value : product.get("category").asText(),
+                "price", field.equals("price") ? value : product.get("price").asDouble(),
+                "quantity", field.equals("quantity") ? value : product.get("quantity").asInt(),
+                "description", field.equals("description") ? value : product.get("description").asText()
+        );
+
+        new Thread(() -> {
+            try {
+                ApiService.put("/products/" + id, body);
+                Platform.runLater(this::loadAllData);
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Update failed"));
+            }
+        }).start();
+    }
+
 }

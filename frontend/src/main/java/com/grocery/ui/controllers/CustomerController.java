@@ -9,16 +9,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomerController {
+
+    @FXML private StackPane rootStack;
 
     @FXML private Label welcomeLabel, balanceLabel;
     @FXML private VBox shopPane, ordersPane, walletPane, cartPane;
@@ -219,10 +220,32 @@ public class CustomerController {
     }
 
     private void setupOrdersTable() {
-        colOrdProduct.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        colOrdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
-        colOrdTotal.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
-        colOrdStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
+        colOrdProduct.setText("Receipt #");
+        colOrdQty.setText("Items");
+
+        colOrdProduct.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        colOrdQty.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+
+            if (!items.isArray()) {
+                return new SimpleStringProperty("0");
+            }
+
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
+        colOrdTotal.setCellValueFactory(d ->
+                new SimpleStringProperty("$" + String.format("%.2f",
+                        d.getValue().path("totalPrice").asDouble()))
+        );
+
+        colOrdStatus.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().path("status").asText())
+        );
+
         colOrdDate.setCellValueFactory(d -> {
             String raw = d.getValue().path("createdAt").asText();
             try {
@@ -231,6 +254,18 @@ public class CustomerController {
             } catch (Exception e) {
                 return new SimpleStringProperty(raw);
             }
+        });
+
+        ordersTable.setRowFactory(tv -> {
+                    TableRow<JsonNode> row = new TableRow<>();
+
+                    row.setOnMouseClicked(event -> {
+                        if (event.getClickCount() == 2 && !row.isEmpty()) {
+                            showReceiptDetails(row.getItem());
+                        }
+                    });
+
+                    return row;
         });
     }
 
@@ -298,12 +333,24 @@ public class CustomerController {
         List<CartItem> snapshot = new ArrayList<>(cartItems);
         new Thread(() -> {
             try {
+                List<Map<String, Object>> itemsList = new ArrayList<>();
+
                 for (CartItem item : snapshot) {
-                    ApiService.postWithStatus("/orders/purchase", Map.of(
-                            "userId", SessionManager.getUserId(),
+                    itemsList.add(Map.of(
                             "productId", item.getProductId(),
-                            "quantity", item.getQuantity()));
+                            "quantity", item.getQuantity()
+                    ));
                 }
+
+                Map<String, Object> requestBody = Map.of(
+                        "userId", SessionManager.getUserId(),
+                        "items", itemsList
+                );
+
+                System.out.println("CHECKOUT REQUEST BODY = " + requestBody);
+
+                ApiService.postWithStatus("/orders/purchase", requestBody);
+
                 JsonNode userNode = ApiService.get("/users/" + SessionManager.getUserId());
                 double newBalance = userNode.path("balance").asDouble();
                 SessionManager.setBalance(newBalance);
@@ -380,6 +427,72 @@ public class CustomerController {
                 Platform.runLater(() -> ordersTable.setItems(list));
             } catch (Exception ignored) {}
         }).start();
+    }
+
+    private void showReceiptDetails(JsonNode order) {
+
+        // Dark background overlay
+        VBox overlay = new VBox();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+        overlay.setAlignment(Pos.CENTER);
+
+        // Receipt card
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(20));
+        card.setMaxWidth(400);
+        card.getStyleClass().add("card");
+
+        Label title = new Label("Receipt #" + order.path("id").asText());
+        title.getStyleClass().add("page-title");
+
+        Label subtitle = new Label("Order Details");
+        subtitle.getStyleClass().add("stat-label");
+
+        VBox itemsBox = new VBox(10);
+
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                VBox itemBox = new VBox(4);
+                itemBox.getStyleClass().add("stat-card");
+
+                Label nameLabel = new Label(item.path("productName").asText());
+                nameLabel.getStyleClass().add("section-title");
+
+                Label detailsLabel = new Label(
+                        "Qty: " + item.path("quantity").asInt()
+                        + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                        + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                );
+                detailsLabel.getStyleClass().add("stat-label");
+
+                itemBox.getChildren().addAll(nameLabel, detailsLabel);
+
+                itemsBox.getChildren().add(itemBox);
+            }
+        }
+
+        Label total = new Label("Total: $" +
+                String.format("%.2f", order.path("totalPrice").asDouble()));
+        total.getStyleClass().add("stat-value-green");
+
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-primary");
+        closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
+
+        card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
+
+        overlay.getChildren().add(card);
+
+        // Click outside to close
+        overlay.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlay) {
+                rootStack.getChildren().remove(overlay);
+            }
+        });
+
+        rootStack.getChildren().add(overlay);
     }
 
     @FXML
