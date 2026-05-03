@@ -382,7 +382,7 @@ public class AdminController {
         imageF.getStyleClass().add("login-field");
         imageF.setEditable(false);
 
-        Button browseBtn = new Button("Browse...");
+        Button browseBtn = new Button("Browse+");
         browseBtn.getStyleClass().add("btn-edit");
         browseBtn.setOnAction(e -> {
             FileChooser chooser = new FileChooser();
