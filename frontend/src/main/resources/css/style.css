@@ -376,3 +376,69 @@
     -fx-border-color: transparent;
     -fx-cursor: hand;
 }
+
+/**
+testing the implementation of the scroll and grid pane product view
+ */
+
+.shop-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.shop-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.product-grid {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+}
+
+.product-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.product-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0, 0, 4);
+}
+
+.product-image-placeholder {
+    -fx-background-color: #f0f4f0;
+    -fx-background-radius: 8px;
+}
+
+.product-card-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b4332;
+}
+
+.product-card-category {
+    -fx-font-size: 11px;
+    -fx-text-fill: white;
+    -fx-background-color: #52b788;
+    -fx-background-radius: 20px;
+    -fx-padding: 2px 8px;
+}
+
+.product-card-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d6a4f;
+}
+
+.product-card-stock {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+}
+
+.product-card-out {
+    -fx-font-size: 12px;
+    -fx-text-fill: #dc2626;
+    -fx-font-weight: 600;
+}

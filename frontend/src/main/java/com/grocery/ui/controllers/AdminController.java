@@ -23,6 +23,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 public class AdminController {
 
     @FXML private StackPane rootStack;
@@ -387,12 +394,45 @@ public class AdminController {
         descF.setPromptText("Description");
         descF.getStyleClass().add("login-field");
 
+        /**
+         * Implementing and testing ImagePath @jomarLub17
+         */
+
+        TextField imageF = new TextField(product == null ? "" : product.path("imagePath").asText());
+        imageF.setPromptText("No image selected");
+        imageF.getStyleClass().add("login-field");
+        imageF.setEditable(false);
+
+        Button browseBtn = new Button("Browse+");
+        browseBtn.getStyleClass().add("btn-edit");
+        browseBtn.setOnAction(e -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Select Product Image");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+            );
+            File file = chooser.showOpenDialog(dialog.getOwner());
+            if (file != null) {
+                try {
+                    Path dest = Paths.get("src/main/resources/com/grocery/ui/images/" + file.getName());
+                    Files.createDirectories(dest.getParent());
+                    Files.copy(file.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+                    imageF.setText("images/" + file.getName());
+                } catch (Exception ex) {
+                    showAlert("Error", "Could not copy image: " + ex.getMessage());
+                }
+            }
+        });
+
+        HBox imageRow = new HBox(8, imageF, browseBtn);
+
         form.getChildren().addAll(
             fieldLabel("Name"), nameF,
             fieldLabel("Category"), catF,
             fieldLabel("Price ($)"), priceF,
             fieldLabel("Quantity"), qtyF,
-            fieldLabel("Description"), descF
+            fieldLabel("Description"), descF,
+            fieldLabel("Image"), imageRow
         );
         dialog.getDialogPane().setContent(form);
 
@@ -413,7 +453,8 @@ public class AdminController {
                     "category", catF.getValue(),
                     "price", price,
                     "quantity", qty,
-                    "description", descF.getText().trim()
+                    "description", descF.getText().trim(),
+                        "imagePath", imageF.getText().trim()
                 );
                 new Thread(() -> {
                     try {

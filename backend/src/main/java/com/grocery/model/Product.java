@@ -23,6 +23,7 @@ public class Product {
     private int quantity;
 
     private String description;
+    private String imagePath;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,4 +37,8 @@ public class Product {
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    // ImagePath to implement images for products
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
 }

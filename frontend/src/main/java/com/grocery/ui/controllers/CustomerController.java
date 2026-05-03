@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.layout.FlowPane;
+
 public class CustomerController {
 
     @FXML private StackPane rootStack;
@@ -33,8 +35,7 @@ public class CustomerController {
     @FXML private VBox shopPane, ordersPane, walletPane, cartPane;
     @FXML private Button navShop, navOrders, navWallet, navCart;
 
-    @FXML private TableView<JsonNode> shopTable;
-    @FXML private TableColumn<JsonNode, String> colShopName, colShopCategory, colShopPrice, colShopStock, colShopDesc, colShopAction;
+    @FXML private FlowPane productGrid; // Replaced TableView components with this line
     @FXML private TextField searchField;
     @FXML private ComboBox<String> categoryFilter;
 
@@ -79,7 +80,7 @@ public class CustomerController {
     public void initialize() {
         welcomeLabel.setText("Hello, " + SessionManager.getFullName());
         updateBalanceDisplay();
-        setupShopTable();
+//        setupShopTable(); no longer necessary
         setupOrdersTable();
         setupCartTable();
         loadProducts();
@@ -106,35 +107,76 @@ public class CustomerController {
         cartTotalLabel.setText("Cart Total: $" + String.format("%.2f", total));
     }
 
-    private void setupShopTable() {
-        colShopName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("name").asText()));
-        colShopCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("category").asText()));
-        colShopPrice.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("price").asDouble())));
-        colShopStock.setCellValueFactory(d -> {
-            int qty = d.getValue().path("quantity").asInt();
-            return new SimpleStringProperty(qty == 0 ? "Out of Stock" : String.valueOf(qty));
-        });
-        colShopDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("description").asText()));
-        colShopAction.setCellFactory(col -> new TableCell<>() {
-            private final Button addBtn = new Button("Add to Cart");
-            {
-                addBtn.getStyleClass().add("btn-buy");
-                addBtn.setOnAction(e -> {
-                    if (getIndex() < getTableView().getItems().size()) {
-                        addToCart(getTableView().getItems().get(getIndex()));
-                    }
-                });
-            }
+    private void buildProductGrid(ObservableList<JsonNode> products) {
+        productGrid.getChildren().clear();
+        for (JsonNode product : products) {
+            productGrid.getChildren().add(createProductCard(product));
+        }
+    }
 
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (!empty && getIndex() < getTableView().getItems().size()) {
-                    addBtn.setDisable(getTableView().getItems().get(getIndex()).path("quantity").asInt() == 0);
+    private VBox createProductCard(JsonNode product) {
+        String name = product.path("name").asText();
+        String category = product.path("category").asText();
+        double price = product.path("price").asDouble();
+        int stock = product.path("quantity").asInt();
+        boolean outOfStock = stock == 0;
+
+        javafx.scene.layout.StackPane imagePlaceholder = new javafx.scene.layout.StackPane();
+        imagePlaceholder.getStyleClass().add("product-image-placeholder");
+        imagePlaceholder.setPrefSize(160, 120);
+
+        String imagePath = product.path("imagePath").asText();
+        if (!imagePath.isEmpty()) {
+            try {
+                java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
+                if (imgUrl != null) {
+                    javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(
+                            new javafx.scene.image.Image(imgUrl.toExternalForm())
+                    );
+                    imageView.setFitWidth(160);
+                    imageView.setFitHeight(120);
+                    imageView.setPreserveRatio(true);
+                    imagePlaceholder.getChildren().add(imageView);
+                } else {
+                    addEmojiPlaceholder(imagePlaceholder);
                 }
-                setGraphic(empty ? null : addBtn);
+            } catch (Exception e) {
+                addEmojiPlaceholder(imagePlaceholder);
             }
-        });
+        } else {
+            addEmojiPlaceholder(imagePlaceholder);
+        }
+
+
+        Label nameLabel = new Label(name);
+        nameLabel.getStyleClass().add("product-card-name");
+        nameLabel.setWrapText(true);
+
+        Label catLabel = new Label(category);
+        catLabel.getStyleClass().add("product-card-category");
+
+        Label priceLabel = new Label(String.format("$%.2f", price));
+        priceLabel.getStyleClass().add("product-card-price");
+
+        Label stockLabel = new Label(outOfStock ? "Out of Stock" : "In Stock: " + stock);
+        stockLabel.getStyleClass().add(outOfStock ? "product-card-out" : "product-card-stock");
+
+        Button addBtn = new Button("Add to Cart");
+        addBtn.getStyleClass().add("btn-buy");
+        addBtn.setMaxWidth(Double.MAX_VALUE);
+        addBtn.setDisable(outOfStock);
+        addBtn.setOnAction(e -> addToCart(product));
+
+        VBox card = new VBox(8, imagePlaceholder, nameLabel, catLabel, priceLabel, stockLabel, addBtn);
+        card.getStyleClass().add("product-card");
+        card.setPrefWidth(180);
+        return card;
+    }
+
+    private void addEmojiPlaceholder(javafx.scene.layout.StackPane pane) {
+        Label emoji = new Label("🥬");
+        emoji.setStyle("-fx-font-size: 40px;");
+        pane.getChildren().add(emoji);
     }
 
     private void addToCart(JsonNode product) {
@@ -276,7 +318,7 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
-                Platform.runLater(() -> shopTable.setItems(list));
+                Platform.runLater(() -> buildProductGrid(list)); // update change from table to Grid
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
             }
@@ -293,13 +335,13 @@ public class CustomerController {
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
         if (cat == null || cat.equals("All")) {
-            shopTable.setItems(allProducts);
+            buildProductGrid(allProducts);// refactoring all shopTables to productGrid
         } else {
             ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
             allProducts.forEach(p -> {
                 if (p.path("category").asText().equals(cat)) filtered.add(p);
             });
-            shopTable.setItems(filtered);
+            buildProductGrid(filtered);// manual refactor
         }
     }
 
@@ -313,7 +355,7 @@ public class CustomerController {
                 filtered.add(p);
             }
         });
-        shopTable.setItems(filtered);
+        buildProductGrid(filtered);// manula refactor
     }
 
     @FXML
