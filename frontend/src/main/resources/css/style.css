@@ -376,3 +376,31 @@
     -fx-border-color: transparent;
     -fx-cursor: hand;
 }
+.requirements-box {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+}
+
+.req-met {
+    -fx-text-fill: #2e7d32;
+    -fx-font-size: 12px;
+}
+
+.req-unmet {
+    -fx-text-fill: #c62828;
+    -fx-font-size: 12px;
+}
+.btn-eye {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 0 8 0 0;
+}
+
+.btn-eye:hover {
+    -fx-background-color: transparent;
+}

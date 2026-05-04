@@ -34,11 +34,30 @@
                 </VBox>
                 <VBox spacing="6">
                     <Label text="Password" styleClass="field-label"/>
-                    <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                    <StackPane>
+                        <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                        <TextField fx:id="passwordVisible" promptText="Enter password" styleClass="login-field" visible="false" managed="false"/>
+                        <Button fx:id="togglePassword" text="👁" onAction="#togglePasswordVisibility" styleClass="btn-eye"
+                                StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
                 </VBox>
+
+
+                <VBox fx:id="requirementsBox" spacing="4" styleClass="requirements-box">
+                    <Label fx:id="reqLength" text="✗  At least 8 characters" styleClass="req-unmet"/>
+                    <Label fx:id="reqUpper" text="✗  One uppercase letter" styleClass="req-unmet"/>
+                    <Label fx:id="reqNumber" text="✗  One number" styleClass="req-unmet"/>
+                    <Label fx:id="reqSpecial" text="✗  One special character (!@#$...)" styleClass="req-unmet"/>
+                </VBox>
+
                 <VBox spacing="6">
                     <Label text="Confirm Password" styleClass="field-label"/>
-                    <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" styleClass="login-field"/>
+                    <StackPane>
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" styleClass="login-field"/>
+                        <TextField fx:id="confirmPasswordVisible" promptText="Confirm password" styleClass="login-field" visible="false" managed="false"/>
+                        <Button fx:id="toggleConfirmPassword" text="👁" onAction="#toggleConfirmPasswordVisibility" styleClass="btn-eye"
+                                StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
                 </VBox>
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
                 <Button text="Create Account" onAction="#handleRegister" styleClass="btn-primary" maxWidth="Infinity"/>
