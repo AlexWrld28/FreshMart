@@ -303,7 +303,18 @@ public class CustomerController {
 
                     row.setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && !row.isEmpty()) {
-                            showReceiptDetails(row.getItem());
+                            long orderId = row.getItem().path("id").asLong();
+
+                            new Thread(() -> {
+                                try {
+                                    JsonNode fullOrder = ApiService.get("/orders/" + orderId);
+
+                                    Platform.runLater(() -> showReceiptDetails(fullOrder));
+
+                                } catch (Exception e) {
+                                    Platform.runLater(() -> showAlert("Error", "Failed to load receipt."));
+                                }
+                            }).start();
                         }
                     });
 
@@ -408,6 +419,8 @@ public class CustomerController {
                         "\nNew balance: $" + String.format("%.2f", newBalance));
                 });
             } catch (Exception e) {
+                e.printStackTrace();
+
                 Platform.runLater(() -> showAlert("Checkout Failed", e.getMessage()));
             }
         }).start();
@@ -464,6 +477,7 @@ public class CustomerController {
         new Thread(() -> {
             try {
                 JsonNode orders = ApiService.get("/orders/user/" + SessionManager.getUserId());
+                System.out.println(orders.toPrettyString());
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 orders.forEach(list::add);
                 Platform.runLater(() -> ordersTable.setItems(list));
@@ -472,6 +486,8 @@ public class CustomerController {
     }
 
     private void showReceiptDetails(JsonNode order) {
+
+        System.out.println(order.toPrettyString());
 
         // Dark background overlay
         VBox overlay = new VBox();

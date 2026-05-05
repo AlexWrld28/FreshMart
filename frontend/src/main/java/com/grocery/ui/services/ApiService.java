@@ -30,12 +30,18 @@ public class ApiService {
 
     public static JsonNode postWithStatus(String path, Object body) throws Exception {
         String json = mapper.writeValueAsString(body);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
+
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("STATUS CODE = " + response.statusCode());
+        System.out.println("RESPONSE BODY = " + response.body());
+
         JsonNode node = mapper.readTree(response.body());
         if (response.statusCode() >= 400) {
             throw new RuntimeException(node.has("message") ? node.get("message").asText() : "Request failed");
