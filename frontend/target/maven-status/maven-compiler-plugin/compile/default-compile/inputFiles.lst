@@ -1,8 +1,8 @@
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/controllers/AdminController.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/controllers/LoginController.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/util/SessionManager.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/controllers/RegisterController.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/module-info.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/MainApp.java
-/Users/jomarlubin/Documents/Hackathon/FreshMart/frontend/src/main/java/com/grocery/ui/services/ApiService.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\controllers\AdminController.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\controllers\CustomerController.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\controllers\LoginController.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\services\ApiService.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\util\SessionManager.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\module-info.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\MainApp.java
+C:\Users\Jake\IdeaProjects\grocery-app\frontend\src\main\java\com\grocery\ui\controllers\RegisterController.java

@@ -41,11 +41,19 @@ public class OrderController {
         return orderRepository.findByUserId(userId);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<?> getOrderById(@PathVariable Long orderId) {
+        Optional<Order> orderOpt = orderRepository.findById(orderId);
+
+        if (orderOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(orderOpt.get());
+    }
+
     @PostMapping("/purchase")
     public ResponseEntity<?> purchase(@RequestBody PurchaseRequest request) {
-
-
-        System.out.println("Request items: " + request.getItems());
 
         Optional<User> userOpt = userRepository.findById(request.getUserId());
 
@@ -69,10 +77,6 @@ public class OrderController {
 
 
         for(PurchaseItemRequest itemRequest : request.getItems()){
-
-            System.out.println("PRODUCT ID = " + itemRequest.getProductId());
-            System.out.println("QUANTITY = " + itemRequest.getQuantity());
-
 
             Optional<Product> productOpt = productRepository.findById(itemRequest.getProductId());
 
@@ -121,7 +125,8 @@ public class OrderController {
         }
 
         order.setTotalPrice(orderTotal);
-        orderRepository.save(order);
+
+        Order savedOrder = orderRepository.save(order);
 
         return ResponseEntity.ok(Map.of(
             "message", "Purchase successful",

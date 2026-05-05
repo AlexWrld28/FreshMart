@@ -303,7 +303,18 @@ public class CustomerController {
 
                     row.setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && !row.isEmpty()) {
-                            showReceiptDetails(row.getItem());
+                            long orderId = row.getItem().path("id").asLong();
+
+                            new Thread(() -> {
+                                try {
+                                    JsonNode fullOrder = ApiService.get("/orders/" + orderId);
+
+                                    Platform.runLater(() -> showReceiptDetails(fullOrder));
+
+                                } catch (Exception e) {
+                                    Platform.runLater(() -> showAlert("Error", "Failed to load receipt."));
+                                }
+                            }).start();
                         }
                     });
 
@@ -388,8 +399,6 @@ public class CustomerController {
                         "userId", SessionManager.getUserId(),
                         "items", itemsList
                 );
-
-                System.out.println("CHECKOUT REQUEST BODY = " + requestBody);
 
                 ApiService.postWithStatus("/orders/purchase", requestBody);
 
