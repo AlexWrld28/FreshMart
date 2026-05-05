@@ -39,9 +39,6 @@ public class ApiService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("STATUS CODE = " + response.statusCode());
-        System.out.println("RESPONSE BODY = " + response.body());
-
         JsonNode node = mapper.readTree(response.body());
         if (response.statusCode() >= 400) {
             throw new RuntimeException(node.has("message") ? node.get("message").asText() : "Request failed");

@@ -55,9 +55,6 @@ public class OrderController {
     @PostMapping("/purchase")
     public ResponseEntity<?> purchase(@RequestBody PurchaseRequest request) {
 
-
-        System.out.println("Request items: " + request.getItems());
-
         Optional<User> userOpt = userRepository.findById(request.getUserId());
 
         if (userOpt.isEmpty()) {
@@ -80,10 +77,6 @@ public class OrderController {
 
 
         for(PurchaseItemRequest itemRequest : request.getItems()){
-
-            System.out.println("PRODUCT ID = " + itemRequest.getProductId());
-            System.out.println("QUANTITY = " + itemRequest.getQuantity());
-
 
             Optional<Product> productOpt = productRepository.findById(itemRequest.getProductId());
 
@@ -134,10 +127,6 @@ public class OrderController {
         order.setTotalPrice(orderTotal);
 
         Order savedOrder = orderRepository.save(order);
-
-        for (OrderItem item : savedOrder.getItems()) {
-            System.out.println("Saved item: " + item.getProductName());
-        }
 
         return ResponseEntity.ok(Map.of(
             "message", "Purchase successful",
