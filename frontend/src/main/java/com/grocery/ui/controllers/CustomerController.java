@@ -11,31 +11,28 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.scene.layout.FlowPane;
 
 public class CustomerController {
 
     @FXML private StackPane rootStack;
 
     @FXML private Label welcomeLabel, balanceLabel;
-    @FXML private VBox shopPane, ordersPane, walletPane, cartPane;
-    @FXML private Button navShop, navOrders, navWallet, navCart;
+    @FXML private VBox shopPane, ordersPane, walletPane, cartPane, aiPane;
+    @FXML private Button navShop, navOrders, navWallet, navCart, navAI;
 
-    @FXML private FlowPane productGrid; // Replaced TableView components with this line
+    @FXML private FlowPane productGrid;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> categoryFilter;
 
@@ -48,6 +45,13 @@ public class CustomerController {
     @FXML private TableView<CartItem> cartTable;
     @FXML private TableColumn<CartItem, String> colCartName, colCartPrice, colCartQty, colCartSubtotal, colCartAction;
     @FXML private Label cartTotalLabel, cartBadge;
+
+    @FXML private TableView<JsonNode> aiResultTable;
+    @FXML private TableColumn<JsonNode, String> colAIName, colAIQty, colAIMatch, colAIPrice, colAIAction;
+    @FXML private TextField aiPromptField;
+    @FXML private Label aiStatusLabel;
+    @FXML private ComboBox<String> dietaryFilter;
+    @FXML private TextField budgetField;
 
     private ObservableList<JsonNode> allProducts = FXCollections.observableArrayList();
     private final ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
@@ -80,9 +84,13 @@ public class CustomerController {
     public void initialize() {
         welcomeLabel.setText("Hello, " + SessionManager.getFullName());
         updateBalanceDisplay();
-//        setupShopTable(); no longer necessary
         setupOrdersTable();
         setupCartTable();
+        setupAITable();
+        dietaryFilter.setItems(FXCollections.observableArrayList(
+                "None", "Vegan", "Vegetarian", "Gluten-Free", "Dairy-Free", "Halal", "Kosher"
+        ));
+        dietaryFilter.setValue("None");
         loadProducts();
         setupCategories();
         cartBadge.setVisible(false);
@@ -146,7 +154,6 @@ public class CustomerController {
         } else {
             addEmojiPlaceholder(imagePlaceholder);
         }
-
 
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add("product-card-name");
@@ -271,11 +278,7 @@ public class CustomerController {
 
         colOrdQty.setCellValueFactory(d -> {
             JsonNode items = d.getValue().path("items");
-
-            if (!items.isArray()) {
-                return new SimpleStringProperty("0");
-            }
-
+            if (!items.isArray()) return new SimpleStringProperty("0");
             return new SimpleStringProperty(String.valueOf(items.size()));
         });
 
@@ -299,27 +302,106 @@ public class CustomerController {
         });
 
         ordersTable.setRowFactory(tv -> {
-                    TableRow<JsonNode> row = new TableRow<>();
-
-                    row.setOnMouseClicked(event -> {
-                        if (event.getClickCount() == 2 && !row.isEmpty()) {
-                            long orderId = row.getItem().path("id").asLong();
-
-                            new Thread(() -> {
-                                try {
-                                    JsonNode fullOrder = ApiService.get("/orders/" + orderId);
-
-                                    Platform.runLater(() -> showReceiptDetails(fullOrder));
-
-                                } catch (Exception e) {
-                                    Platform.runLater(() -> showAlert("Error", "Failed to load receipt."));
-                                }
-                            }).start();
+            TableRow<JsonNode> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    long orderId = row.getItem().path("id").asLong();
+                    new Thread(() -> {
+                        try {
+                            JsonNode fullOrder = ApiService.get("/orders/" + orderId);
+                            Platform.runLater(() -> showReceiptDetails(fullOrder));
+                        } catch (Exception e) {
+                            Platform.runLater(() -> showAlert("Error", "Failed to load receipt."));
                         }
-                    });
-
-                    return row;
+                    }).start();
+                }
+            });
+            return row;
         });
+    }
+
+    private void setupAITable() {
+        colAIName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("suggestedName").asText()));
+        colAIQty.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("suggestedQuantity").asText()));
+        colAIMatch.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("matchedProductName").asText()));
+        colAIPrice.setCellValueFactory(d -> {
+            double price = d.getValue().path("price").asDouble();
+            return new SimpleStringProperty(price > 0 ? "$" + String.format("%.2f", price) : "N/A");
+        });
+        colAIAction.setCellFactory(col -> new TableCell<>() {
+            private final Button addBtn = new Button("Add to Cart");
+            {
+                addBtn.getStyleClass().add("btn-buy");
+                addBtn.setOnAction(e -> {
+                    if (getIndex() < getTableView().getItems().size()) {
+                        JsonNode item = getTableView().getItems().get(getIndex());
+                        if (!item.path("inStock").asBoolean()) {
+                            showAlert("Out of Stock", item.path("matchedProductName").asText() + " is not available.");
+                            return;
+                        }
+                        long productId = item.path("matchedProductId").asLong();
+                        allProducts.stream()
+                                .filter(p -> p.path("id").asLong() == productId)
+                                .findFirst()
+                                .ifPresent(p -> addToCart(p));
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && getIndex() < getTableView().getItems().size()) {
+                    boolean inStock = getTableView().getItems().get(getIndex()).path("inStock").asBoolean();
+                    addBtn.setDisable(!inStock);
+                }
+                setGraphic(empty ? null : addBtn);
+            }
+        });
+    }
+
+    @FXML
+    public void handleGenerateList() {
+        String prompt = aiPromptField.getText().trim();
+        if (prompt.isBlank()) {
+            aiStatusLabel.setText("Please enter what you want to make or buy.");
+            return;
+        }
+
+        String dietary = dietaryFilter.getValue() != null ? dietaryFilter.getValue() : "None";
+        String budgetText = budgetField.getText().trim();
+        Double budget = null;
+        if (!budgetText.isBlank()) {
+            try {
+                budget = Double.parseDouble(budgetText);
+            } catch (NumberFormatException e) {
+                aiStatusLabel.setText("Please enter a valid budget amount.");
+                return;
+            }
+        }
+
+        aiStatusLabel.setText("Generating your grocery list...");
+        aiResultTable.getItems().clear();
+
+        final Double finalBudget = budget;
+        new Thread(() -> {
+            try {
+                Map<String, Object> requestBody = new HashMap<>();
+                requestBody.put("prompt", prompt);
+                requestBody.put("dietaryFilter", dietary);
+                if (finalBudget != null) requestBody.put("budget", finalBudget);
+
+                JsonNode result = ApiService.postAI("/ai/grocery-list", requestBody);
+                ObservableList<JsonNode> list = FXCollections.observableArrayList();
+                result.forEach(list::add);
+                Platform.runLater(() -> {
+                    aiResultTable.setItems(list);
+                    aiStatusLabel.setText("Found " + list.size() + " items for your list.");
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> aiStatusLabel.setText("Error: " + e.getMessage()));
+            }
+        }).start();
     }
 
     private void loadProducts() {
@@ -329,7 +411,7 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
-                Platform.runLater(() -> buildProductGrid(list)); // update change from table to Grid
+                Platform.runLater(() -> buildProductGrid(list));
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
             }
@@ -346,13 +428,13 @@ public class CustomerController {
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
         if (cat == null || cat.equals("All")) {
-            buildProductGrid(allProducts);// refactoring all shopTables to productGrid
+            buildProductGrid(allProducts);
         } else {
             ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
             allProducts.forEach(p -> {
                 if (p.path("category").asText().equals(cat)) filtered.add(p);
             });
-            buildProductGrid(filtered);// manual refactor
+            buildProductGrid(filtered);
         }
     }
 
@@ -362,11 +444,11 @@ public class CustomerController {
         ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
         allProducts.forEach(p -> {
             if (p.path("name").asText().toLowerCase().contains(q) ||
-                p.path("category").asText().toLowerCase().contains(q)) {
+                    p.path("category").asText().toLowerCase().contains(q)) {
                 filtered.add(p);
             }
         });
-        buildProductGrid(filtered);// manula refactor
+        buildProductGrid(filtered);
     }
 
     @FXML
@@ -378,30 +460,26 @@ public class CustomerController {
         double total = cartItems.stream().mapToDouble(CartItem::getSubtotal).sum();
         if (SessionManager.getBalance() < total) {
             showAlert("Insufficient Balance",
-                "Cart total is $" + String.format("%.2f", total) +
-                " but your balance is $" + String.format("%.2f", SessionManager.getBalance()) +
-                ".\nPlease top up your wallet.");
+                    "Cart total is $" + String.format("%.2f", total) +
+                            " but your balance is $" + String.format("%.2f", SessionManager.getBalance()) +
+                            ".\nPlease top up your wallet.");
             return;
         }
         List<CartItem> snapshot = new ArrayList<>(cartItems);
         new Thread(() -> {
             try {
                 List<Map<String, Object>> itemsList = new ArrayList<>();
-
                 for (CartItem item : snapshot) {
                     itemsList.add(Map.of(
                             "productId", item.getProductId(),
                             "quantity", item.getQuantity()
                     ));
                 }
-
                 Map<String, Object> requestBody = Map.of(
                         "userId", SessionManager.getUserId(),
                         "items", itemsList
                 );
-
                 ApiService.postWithStatus("/orders/purchase", requestBody);
-
                 JsonNode userNode = ApiService.get("/users/" + SessionManager.getUserId());
                 double newBalance = userNode.path("balance").asDouble();
                 SessionManager.setBalance(newBalance);
@@ -412,9 +490,9 @@ public class CustomerController {
                     updateBalanceDisplay();
                     loadProducts();
                     showInfo("Checkout Successful",
-                        snapshot.size() + " item(s) purchased.\nTotal charged: $" +
-                        String.format("%.2f", total) +
-                        "\nNew balance: $" + String.format("%.2f", newBalance));
+                            snapshot.size() + " item(s) purchased.\nTotal charged: $" +
+                                    String.format("%.2f", total) +
+                                    "\nNew balance: $" + String.format("%.2f", newBalance));
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Checkout Failed", e.getMessage()));
@@ -466,6 +544,7 @@ public class CustomerController {
     @FXML public void showShop() { switchPane(shopPane); setActive(navShop); loadProducts(); }
     @FXML public void showCart() { switchPane(cartPane); setActive(navCart); updateCartTotal(); }
     @FXML public void showWallet() { switchPane(walletPane); setActive(navWallet); updateBalanceDisplay(); }
+    @FXML public void showAI() { switchPane(aiPane); setActive(navAI); }
 
     @FXML
     public void showOrders() {
@@ -481,13 +560,10 @@ public class CustomerController {
     }
 
     private void showReceiptDetails(JsonNode order) {
-
-        // Dark background overlay
         VBox overlay = new VBox();
         overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
         overlay.setAlignment(Pos.CENTER);
 
-        // Receipt card
         VBox card = new VBox(15);
         card.setPadding(new Insets(20));
         card.setMaxWidth(400);
@@ -500,7 +576,6 @@ public class CustomerController {
         subtitle.getStyleClass().add("stat-label");
 
         VBox itemsBox = new VBox(10);
-
         JsonNode items = order.path("items");
 
         if (items.isArray()) {
@@ -513,19 +588,17 @@ public class CustomerController {
 
                 Label detailsLabel = new Label(
                         "Qty: " + item.path("quantity").asInt()
-                        + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
-                        + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                                + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                                + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
                 );
                 detailsLabel.getStyleClass().add("stat-label");
 
                 itemBox.getChildren().addAll(nameLabel, detailsLabel);
-
                 itemsBox.getChildren().add(itemBox);
             }
         }
 
-        Label total = new Label("Total: $" +
-                String.format("%.2f", order.path("totalPrice").asDouble()));
+        Label total = new Label("Total: $" + String.format("%.2f", order.path("totalPrice").asDouble()));
         total.getStyleClass().add("stat-value-green");
 
         Button closeBtn = new Button("Close");
@@ -533,14 +606,10 @@ public class CustomerController {
         closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
 
         card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
-
         overlay.getChildren().add(card);
 
-        // Click outside to close
         overlay.setOnMouseClicked(e -> {
-            if (e.getTarget() == overlay) {
-                rootStack.getChildren().remove(overlay);
-            }
+            if (e.getTarget() == overlay) rootStack.getChildren().remove(overlay);
         });
 
         rootStack.getChildren().add(overlay);
@@ -553,11 +622,12 @@ public class CustomerController {
     }
 
     private void switchPane(VBox target) {
-        shopPane.setVisible(false); shopPane.setManaged(false);
+        shopPane.setVisible(false);   shopPane.setManaged(false);
         ordersPane.setVisible(false); ordersPane.setManaged(false);
         walletPane.setVisible(false); walletPane.setManaged(false);
-        cartPane.setVisible(false); cartPane.setManaged(false);
-        target.setVisible(true); target.setManaged(true);
+        cartPane.setVisible(false);   cartPane.setManaged(false);
+        aiPane.setVisible(false);     aiPane.setManaged(false);
+        target.setVisible(true);      target.setManaged(true);
     }
 
     private void setActive(Button active) {
@@ -565,6 +635,7 @@ public class CustomerController {
         navOrders.getStyleClass().remove("nav-active");
         navWallet.getStyleClass().remove("nav-active");
         navCart.getStyleClass().remove("nav-active");
+        navAI.getStyleClass().remove("nav-active");
         if (!active.getStyleClass().contains("nav-active")) active.getStyleClass().add("nav-active");
     }
 

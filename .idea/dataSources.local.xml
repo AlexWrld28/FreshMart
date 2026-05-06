@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-243.28141.18">
+  <component name="dataSourceStorageLocal" created-in="IU-261.23567.138">
     <data-source name="grocery.db" uuid="1e07ce44-bc86-4b86-a0a6-44b74fb0493a">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" />
       <secret-storage>master_key</secret-storage>
       <auth-provider>no-auth</auth-provider>
       <schema-mapping />
+    </data-source>
+    <data-source name="grocery" uuid="b4119bfa-db33-4548-9d63-89d8acd9a59f">
+      <database-info product="SQLite" version="3.51.1" jdbc-version="4.2" driver-name="SQLite JDBC" driver-version="3.51.1.0" dbms="SQLITE" exact-version="3.51.1" exact-driver-version="3.51">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="grocery.db" uuid="8fa774da-d745-4d7f-aac0-6a03c477aca4">
+      <database-info product="SQLite" version="3.51.1" jdbc-version="4.2" driver-name="SQLite JDBC" driver-version="3.51.1.0" dbms="SQLITE" exact-version="3.51.1" exact-driver-version="3.51">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
     </data-source>
   </component>
 </project>

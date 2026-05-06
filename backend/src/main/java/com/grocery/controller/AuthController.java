@@ -44,6 +44,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User newUser) {
+        if (newUser.getConfirmPassword() != null && !newUser.getPassword().equals(newUser.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Passwords do not match"));
+        }
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Email already in use"));
         }

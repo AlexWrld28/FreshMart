@@ -30,15 +30,12 @@ public class ApiService {
 
     public static JsonNode postWithStatus(String path, Object body) throws Exception {
         String json = mapper.writeValueAsString(body);
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
         JsonNode node = mapper.readTree(response.body());
         if (response.statusCode() >= 400) {
             throw new RuntimeException(node.has("message") ? node.get("message").asText() : "Request failed");
@@ -72,6 +69,19 @@ public class ApiService {
                 .DELETE()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return mapper.readTree(response.body());
+    }
+    public static JsonNode postAI(String path, Object body) throws Exception {
+        String json = mapper.writeValueAsString(body);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + path))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() >= 400) {
+            throw new RuntimeException("AI request failed: " + response.statusCode() + " " + response.body());
+        }
         return mapper.readTree(response.body());
     }
 }

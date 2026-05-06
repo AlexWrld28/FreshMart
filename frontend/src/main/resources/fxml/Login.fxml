@@ -30,7 +30,12 @@
                 </VBox>
                 <VBox spacing="6">
                     <Label text="Password" styleClass="field-label"/>
-                    <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                    <StackPane>
+                        <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                        <TextField fx:id="passwordVisible" promptText="Enter password" styleClass="login-field" visible="false" managed="false"/>
+                        <Button fx:id="togglePassword" text="👁" onAction="#togglePasswordVisibility" styleClass="btn-eye"
+                                StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
                 </VBox>
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
                 <Button text="Sign In" onAction="#handleLogin" styleClass="btn-primary" maxWidth="Infinity"/>
