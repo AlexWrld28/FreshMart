@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Grocery App Run" type="CompoundRunConfigurationType">
+    <toRun name="Frontend" type="Application" />
+    <toRun name="Backend" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>
