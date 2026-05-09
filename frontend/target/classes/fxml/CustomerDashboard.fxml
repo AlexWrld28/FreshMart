@@ -32,6 +32,7 @@
                 <Button fx:id="navCart" text="Cart" onAction="#showCart" maxWidth="Infinity" styleClass="nav-btn"/>
                 <Button fx:id="navOrders" text="My Orders" onAction="#showOrders" maxWidth="Infinity" styleClass="nav-btn"/>
                 <Button fx:id="navWallet" text="My Wallet" onAction="#showWallet" maxWidth="Infinity" styleClass="nav-btn"/>
+                <Button fx:id="navAI" text="AI Grocery List" onAction="#showAI" maxWidth="Infinity" styleClass="nav-btn"/>
                 <Label fx:id="cartBadge" text="" styleClass="cart-badge"/>
             </VBox>
         </left>
@@ -97,6 +98,27 @@
                         <Label fx:id="topUpMessage" styleClass="success-label" wrapText="true"/>
                         <Button text="Add Funds" onAction="#handleTopUp" styleClass="btn-primary" maxWidth="180"/>
                     </VBox>
+                </VBox>
+
+                <VBox fx:id="aiPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
+                    <Label text="AI Grocery List" styleClass="page-title"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <TextField fx:id="aiPromptField" promptText="e.g. I want to make tacos for 4 people"
+                                   styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="dietaryFilter" promptText="Dietary Filter" styleClass="combo-field"/>
+                        <TextField fx:id="budgetField" promptText="Budget ($)" styleClass="search-field" prefWidth="100"/>
+                        <Button text="Generate List" onAction="#handleGenerateList" styleClass="btn-primary"/>
+                    </HBox>
+                    <Label fx:id="aiStatusLabel" styleClass="field-label" wrapText="true"/>
+                    <TableView fx:id="aiResultTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colAIName" text="Ingredient" prefWidth="170"/>
+                            <TableColumn fx:id="colAIQty" text="Quantity" prefWidth="100"/>
+                            <TableColumn fx:id="colAIMatch" text="Best Match in Store" prefWidth="200"/>
+                            <TableColumn fx:id="colAIPrice" text="Price" prefWidth="80"/>
+                            <TableColumn fx:id="colAIAction" text="" prefWidth="110"/>
+                        </columns>
+                    </TableView>
                 </VBox>
 
             </StackPane>
