@@ -77,7 +77,25 @@ public class AIService {
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson))
                 .build();
 
-        HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> httpResponse = null;
+        int maxRetries = 3;
+        int attempt = 0;
+
+        while (attempt < maxRetries) {
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (httpResponse.statusCode() == 200) break;
+
+            // If 503 (server overloaded) wait and retry
+            if (httpResponse.statusCode() == 503) {
+                attempt++;
+                if (attempt < maxRetries) {
+                    Thread.sleep(2000); // wait 2 seconds before retrying
+                }
+            } else {
+                // For other errors (429, 404 etc) don't retry
+                break;
+            }
+        }
 
         if (httpResponse.statusCode() != 200) {
             throw new RuntimeException(httpResponse.statusCode() + " " + httpResponse.body());
