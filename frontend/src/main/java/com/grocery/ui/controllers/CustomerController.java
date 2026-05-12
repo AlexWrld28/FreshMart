@@ -92,7 +92,6 @@ public class CustomerController {
         ));
         dietaryFilter.setValue("None");
         loadProducts();
-        setupCategories();
         cartBadge.setVisible(false);
         cartBadge.setManaged(false);
     }
@@ -136,23 +135,46 @@ public class CustomerController {
         String imagePath = product.path("imagePath").asText();
         if (!imagePath.isEmpty()) {
             try {
-                java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
-                if (imgUrl != null) {
-                    javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(
-                            new javafx.scene.image.Image(imgUrl.toExternalForm())
-                    );
+                javafx.scene.image.Image image;
+
+                if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+
+                    image = new javafx.scene.image.Image(imagePath, false);
+
+                } else {
+
+                    java.net.URL imgUrl =
+                            getClass().getResource("/com/grocery/ui/" + imagePath);
+
+                    if (imgUrl == null) {
+                        addFallbackImage(imagePlaceholder, category);
+                        image = null;
+                    } else{
+                    image = new javafx.scene.image.Image(imgUrl.toExternalForm());
+                    }
+                }
+
+                if (image != null) {
+                    javafx.scene.image.ImageView imageView =
+                            new javafx.scene.image.ImageView(image);
+
                     imageView.setFitWidth(160);
                     imageView.setFitHeight(120);
                     imageView.setPreserveRatio(true);
-                    imagePlaceholder.getChildren().add(imageView);
-                } else {
-                    addEmojiPlaceholder(imagePlaceholder);
+
+                    if (image.getWidth() > 0 && !image.isError()) {
+                        imagePlaceholder.getChildren().add(imageView);
+                    } else {
+                        addFallbackImage(imagePlaceholder, category);
+                    }
+
                 }
+
             } catch (Exception e) {
-                addEmojiPlaceholder(imagePlaceholder);
+                addFallbackImage(imagePlaceholder, category);
             }
         } else {
-            addEmojiPlaceholder(imagePlaceholder);
+            addFallbackImage(imagePlaceholder, category);
         }
 
         Label nameLabel = new Label(name);
@@ -180,10 +202,62 @@ public class CustomerController {
         return card;
     }
 
-    private void addEmojiPlaceholder(javafx.scene.layout.StackPane pane) {
-        Label emoji = new Label("🥬");
-        emoji.setStyle("-fx-font-size: 40px;");
-        pane.getChildren().add(emoji);
+    private void addFallbackImage(StackPane pane, String category) {
+
+        String fallbackPath;
+
+        switch (category.toLowerCase()){
+
+            case "fruits & vegetables":
+                fallbackPath = "/com/grocery/ui/images/Fruits and Vegetables.png";
+                break;
+
+            case "beverages":
+                fallbackPath = "/com/grocery/ui/images/Beverages.png";
+                break;
+
+            case "bakery, cakes & dairy":
+                fallbackPath = "/com/grocery/ui/images/Bakery, Cakes & Dairy.png";
+                break;
+
+            case "snacks & branded foods":
+                fallbackPath = "/com/grocery/ui/images/Snacks & Branded Foods.png";
+                break;
+
+            case "cleaning & household":
+                fallbackPath = "/com/grocery/ui/images/Cleaning & Household.png";
+                break;
+
+            case "beauty & hygiene":
+                fallbackPath = "/com/grocery/ui/images/Beauty & Hygien.png";
+                break;
+
+            default:
+                fallbackPath = "/com/grocery/ui/images/Default.png";
+                break;
+        }
+
+        try {
+
+            javafx.scene.image.Image fallbackImage =
+                    new javafx.scene.image.Image(
+                            getClass().getResource(fallbackPath).toExternalForm()
+                    );
+
+            javafx.scene.image.ImageView fallbackView =
+                    new javafx.scene.image.ImageView(fallbackImage);
+
+            fallbackView.setFitWidth(160);
+            fallbackView.setFitHeight(120);
+            fallbackView.setPreserveRatio(true);
+
+            pane.getChildren().add(fallbackView);
+
+        } catch (Exception e) {
+
+            Label placeholder = new Label("No Image");
+            pane.getChildren().add(placeholder);
+        }
     }
 
     private void addToCart(JsonNode product) {
@@ -411,7 +485,10 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
-                Platform.runLater(() -> buildProductGrid(list));
+                Platform.runLater(() -> {
+                    setupCategories();
+                    buildProductGrid(list);
+                });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
             }
@@ -419,8 +496,24 @@ public class CustomerController {
     }
 
     private void setupCategories() {
-        categoryFilter.setItems(FXCollections.observableArrayList(
-                "All", "Produce", "Dairy", "Meat", "Seafood", "Bakery", "Frozen", "Beverages", "Pantry"));
+
+        java.util.Set<String> categories = new java.util.TreeSet<>();
+
+        allProducts.forEach(product -> {
+            String category = product.path("category").asText();
+
+            if (!category.isBlank()) {
+                categories.add(category);
+            }
+        });
+
+        ObservableList<String> categoryList =
+                FXCollections.observableArrayList();
+
+        categoryList.add("All");
+        categoryList.addAll(categories);
+
+        categoryFilter.setItems(categoryList);
         categoryFilter.setValue("All");
     }
 

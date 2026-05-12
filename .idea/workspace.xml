@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="" />
+    <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/ProductCsvImporter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Grocery App Run.run.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.run/Grocery App Run.run.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/LoginRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/repository/ProductRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/repository/ProductRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grocery.db" beforeDir="false" afterPath="$PROJECT_DIR$/grocery.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,10 +79,10 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.GroceryApplication.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "New__item__list",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Jonathan Salvador/IdeaProjects/FreshMart/FreshMart-test",
+    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app/backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -79,12 +98,13 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jake\IdeaProjects\grocery-app\backend" />
       <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test" />
       <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test\backend" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainApp">
-    <configuration name="MainApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Compound.Grocery App Run">
+    <configuration name="MainApp" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.grocery.ui.MainApp" />
       <module name="grocery-frontend" />
       <extension name="coverage">
@@ -104,11 +124,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.MainApp" />
-      </list>
-    </recent_temporary>
+    <list>
+      <item itemvalue="Application.MainApp" />
+      <item itemvalue="Compound.Grocery App Run" />
+      <item itemvalue="Spring Boot.GroceryApplication" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
