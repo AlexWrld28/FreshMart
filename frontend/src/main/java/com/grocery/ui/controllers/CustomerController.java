@@ -9,31 +9,34 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CustomerController {
 
-    @FXML private Label welcomeLabel, balanceLabel;
-    @FXML private VBox shopPane, ordersPane, walletPane, cartPane;
-    @FXML private Button navShop, navOrders, navWallet, navCart;
+    @FXML private StackPane rootStack;
 
-    @FXML private TableView<JsonNode> shopTable;
-    @FXML private TableColumn<JsonNode, String> colShopName, colShopCategory, colShopPrice, colShopStock, colShopDesc, colShopAction;
+    @FXML private Label welcomeLabel, balanceLabel;
+    @FXML private VBox shopPane, ordersPane, walletPane, cartPane, aiPane;
+    @FXML private Button navShop, navOrders, navWallet, navCart, navAI;
+
+    @FXML private FlowPane productGrid;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> categoryFilter;
 
@@ -47,8 +50,24 @@ public class CustomerController {
     @FXML private TableColumn<CartItem, String> colCartName, colCartPrice, colCartQty, colCartSubtotal, colCartAction;
     @FXML private Label cartTotalLabel, cartBadge;
 
+    @FXML private TableView<JsonNode> aiResultTable;
+    @FXML private TableColumn<JsonNode, String> colAIName, colAIQty, colAIMatch, colAIPrice, colAIAction;
+    @FXML private TextField aiPromptField;
+    @FXML private Label aiStatusLabel;
+    @FXML private ComboBox<String> dietaryFilter;
+    @FXML private TextField budgetField;
+
+    @FXML private Label pageLabel;
+
     private ObservableList<JsonNode> allProducts = FXCollections.observableArrayList();
     private final ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
+    private ObservableList<JsonNode> displayedProducts = FXCollections.observableArrayList();
+
+    private int currentPage = 0;
+    private final int pageSize = 50;
+    private static final double PRODUCT_IMAGE_WIDTH = 160;
+    private static final double PRODUCT_IMAGE_HEIGHT = 120;
+    private final Map<String, Image> imageCache = new ConcurrentHashMap<>();
 
     public static class CartItem {
         private final long productId;
@@ -78,13 +97,32 @@ public class CustomerController {
     public void initialize() {
         welcomeLabel.setText("Hello, " + SessionManager.getFullName());
         updateBalanceDisplay();
-        setupShopTable();
         setupOrdersTable();
         setupCartTable();
+        setupAITable();
+        dietaryFilter.setItems(FXCollections.observableArrayList(
+                "None", "Vegan", "Vegetarian", "Gluten-Free", "Dairy-Free", "Halal", "Kosher"
+        ));
+        dietaryFilter.setValue("None");
         loadProducts();
-        setupCategories();
         cartBadge.setVisible(false);
         cartBadge.setManaged(false);
+    }
+
+    @FXML
+    public void handleNextPage() {
+        if ((currentPage + 1) * pageSize < displayedProducts.size()) {
+            currentPage++;
+            showProductPage();
+        }
+    }
+
+    @FXML
+    public void handlePreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            showProductPage();
+        }
     }
 
     private void updateBalanceDisplay() {
@@ -105,35 +143,167 @@ public class CustomerController {
         cartTotalLabel.setText("Cart Total: $" + String.format("%.2f", total));
     }
 
-    private void setupShopTable() {
-        colShopName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("name").asText()));
-        colShopCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("category").asText()));
-        colShopPrice.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("price").asDouble())));
-        colShopStock.setCellValueFactory(d -> {
-            int qty = d.getValue().path("quantity").asInt();
-            return new SimpleStringProperty(qty == 0 ? "Out of Stock" : String.valueOf(qty));
-        });
-        colShopDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("description").asText()));
-        colShopAction.setCellFactory(col -> new TableCell<>() {
-            private final Button addBtn = new Button("Add to Cart");
-            {
-                addBtn.getStyleClass().add("btn-buy");
-                addBtn.setOnAction(e -> {
-                    if (getIndex() < getTableView().getItems().size()) {
-                        addToCart(getTableView().getItems().get(getIndex()));
-                    }
-                });
+    private void buildProductGrid(ObservableList<JsonNode> products) {
+        productGrid.getChildren().clear();
+        for (JsonNode product : products) {
+            productGrid.getChildren().add(createProductCard(product));
+        }
+    }
+
+    private VBox createProductCard(JsonNode product) {
+        String name = product.path("name").asText();
+        String category = product.path("category").asText();
+        double price = product.path("price").asDouble();
+        int stock = product.path("quantity").asInt();
+        boolean outOfStock = stock == 0;
+
+        javafx.scene.layout.StackPane imagePlaceholder = new javafx.scene.layout.StackPane();
+        imagePlaceholder.getStyleClass().add("product-image-placeholder");
+        imagePlaceholder.setPrefSize(PRODUCT_IMAGE_WIDTH, PRODUCT_IMAGE_HEIGHT);
+
+        String imagePath = product.path("imagePath").asText();
+        addProductImage(imagePlaceholder, imagePath, category);
+
+        Label nameLabel = new Label(name);
+        nameLabel.getStyleClass().add("product-card-name");
+        nameLabel.setWrapText(true);
+
+        Label catLabel = new Label(category);
+        catLabel.getStyleClass().add("product-card-category");
+
+        Label priceLabel = new Label(String.format("$%.2f", price));
+        priceLabel.getStyleClass().add("product-card-price");
+
+        Label stockLabel = new Label(outOfStock ? "Out of Stock" : "In Stock: " + stock);
+        stockLabel.getStyleClass().add(outOfStock ? "product-card-out" : "product-card-stock");
+
+        Button addBtn = new Button("Add to Cart");
+        addBtn.getStyleClass().add("btn-buy");
+        addBtn.setMaxWidth(Double.MAX_VALUE);
+        addBtn.setDisable(outOfStock);
+        addBtn.setOnAction(e -> addToCart(product));
+
+        VBox card = new VBox(8, imagePlaceholder, nameLabel, catLabel, priceLabel, stockLabel, addBtn);
+        card.getStyleClass().add("product-card");
+        card.setPrefWidth(180);
+        return card;
+    }
+
+    private void addProductImage(StackPane pane, String imagePath, String category) {
+        if (imagePath == null || imagePath.isBlank()) {
+            addFallbackImage(pane, category);
+            return;
+        }
+
+        try {
+            boolean remoteImage = imagePath.startsWith("http://") || imagePath.startsWith("https://");
+            String imageSource = remoteImage ? imagePath : resolveResourceImagePath(imagePath);
+
+            if (imageSource == null) {
+                addFallbackImage(pane, category);
+                return;
             }
 
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (!empty && getIndex() < getTableView().getItems().size()) {
-                    addBtn.setDisable(getTableView().getItems().get(getIndex()).path("quantity").asInt() == 0);
+            Image image = getCachedImage(imageSource, remoteImage);
+            ImageView imageView = createProductImageView(image);
+
+            if (!remoteImage || image.getProgress() >= 1.0) {
+                if (image.isError()) {
+                    addFallbackImage(pane, category);
+                } else {
+                    pane.getChildren().add(imageView);
                 }
-                setGraphic(empty ? null : addBtn);
+                return;
             }
-        });
+
+            addFallbackImage(pane, category);
+            image.progressProperty().addListener((obs, oldProgress, newProgress) -> {
+                if (newProgress.doubleValue() >= 1.0 && !image.isError()) {
+                    pane.getChildren().setAll(imageView);
+                }
+            });
+        } catch (Exception e) {
+            addFallbackImage(pane, category);
+        }
+    }
+
+    private String resolveResourceImagePath(String imagePath) {
+        URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
+        return imgUrl == null ? null : imgUrl.toExternalForm();
+    }
+
+    private Image getCachedImage(String imageSource, boolean backgroundLoading) {
+        return imageCache.computeIfAbsent(imageSource, source ->
+                new Image(
+                        source,
+                        PRODUCT_IMAGE_WIDTH,
+                        PRODUCT_IMAGE_HEIGHT,
+                        true,
+                        true,
+                        backgroundLoading
+                )
+        );
+    }
+
+    private ImageView createProductImageView(Image image) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(PRODUCT_IMAGE_WIDTH);
+        imageView.setFitHeight(PRODUCT_IMAGE_HEIGHT);
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    private void addFallbackImage(StackPane pane, String category) {
+
+        String fallbackPath;
+
+        switch (category.toLowerCase()){
+
+            case "fruits & vegetables":
+                fallbackPath = "/com/grocery/ui/images/Fruits and Vegetables.png";
+                break;
+
+            case "beverages":
+                fallbackPath = "/com/grocery/ui/images/Beverages.png";
+                break;
+
+            case "bakery, cakes & dairy":
+                fallbackPath = "/com/grocery/ui/images/Bakery, Cakes & Dairy.png";
+                break;
+
+            case "snacks & branded foods":
+                fallbackPath = "/com/grocery/ui/images/Snacks & Branded Foods.png";
+                break;
+
+            case "cleaning & household":
+                fallbackPath = "/com/grocery/ui/images/Cleaning & Household.png";
+                break;
+
+            case "beauty & hygiene":
+                fallbackPath = "/com/grocery/ui/images/Beauty & Hygien.png";
+                break;
+
+            default:
+                fallbackPath = "/com/grocery/ui/images/Default.png";
+                break;
+        }
+
+        try {
+            URL fallbackUrl = getClass().getResource(fallbackPath);
+            if (fallbackUrl == null) {
+                throw new IllegalArgumentException("Missing fallback image: " + fallbackPath);
+            }
+
+            Image fallbackImage = getCachedImage(fallbackUrl.toExternalForm(), false);
+            ImageView fallbackView = createProductImageView(fallbackImage);
+
+            pane.getChildren().add(fallbackView);
+
+        } catch (Exception e) {
+
+            Label placeholder = new Label("No Image");
+            pane.getChildren().add(placeholder);
+        }
     }
 
     private void addToCart(JsonNode product) {
@@ -219,10 +389,28 @@ public class CustomerController {
     }
 
     private void setupOrdersTable() {
-        colOrdProduct.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        colOrdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
-        colOrdTotal.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
-        colOrdStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
+        colOrdProduct.setText("Receipt #");
+        colOrdQty.setText("Items");
+
+        colOrdProduct.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        colOrdQty.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+            if (!items.isArray()) return new SimpleStringProperty("0");
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
+        colOrdTotal.setCellValueFactory(d ->
+                new SimpleStringProperty("$" + String.format("%.2f",
+                        d.getValue().path("totalPrice").asDouble()))
+        );
+
+        colOrdStatus.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().path("status").asText())
+        );
+
         colOrdDate.setCellValueFactory(d -> {
             String raw = d.getValue().path("createdAt").asText();
             try {
@@ -232,6 +420,108 @@ public class CustomerController {
                 return new SimpleStringProperty(raw);
             }
         });
+
+        ordersTable.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    long orderId = row.getItem().path("id").asLong();
+                    new Thread(() -> {
+                        try {
+                            JsonNode fullOrder = ApiService.get("/orders/" + orderId);
+                            Platform.runLater(() -> showReceiptDetails(fullOrder));
+                        } catch (Exception e) {
+                            Platform.runLater(() -> showAlert("Error", "Failed to load receipt."));
+                        }
+                    }).start();
+                }
+            });
+            return row;
+        });
+    }
+
+    private void setupAITable() {
+        colAIName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("suggestedName").asText()));
+        colAIQty.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("suggestedQuantity").asText()));
+        colAIMatch.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("matchedProductName").asText()));
+        colAIPrice.setCellValueFactory(d -> {
+            double price = d.getValue().path("price").asDouble();
+            return new SimpleStringProperty(price > 0 ? "$" + String.format("%.2f", price) : "N/A");
+        });
+        colAIAction.setCellFactory(col -> new TableCell<>() {
+            private final Button addBtn = new Button("Add to Cart");
+            {
+                addBtn.getStyleClass().add("btn-buy");
+                addBtn.setOnAction(e -> {
+                    if (getIndex() < getTableView().getItems().size()) {
+                        JsonNode item = getTableView().getItems().get(getIndex());
+                        if (!item.path("inStock").asBoolean()) {
+                            showAlert("Out of Stock", item.path("matchedProductName").asText() + " is not available.");
+                            return;
+                        }
+                        long productId = item.path("matchedProductId").asLong();
+                        allProducts.stream()
+                                .filter(p -> p.path("id").asLong() == productId)
+                                .findFirst()
+                                .ifPresent(p -> addToCart(p));
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty && getIndex() < getTableView().getItems().size()) {
+                    boolean inStock = getTableView().getItems().get(getIndex()).path("inStock").asBoolean();
+                    addBtn.setDisable(!inStock);
+                }
+                setGraphic(empty ? null : addBtn);
+            }
+        });
+    }
+
+    @FXML
+    public void handleGenerateList() {
+        String prompt = aiPromptField.getText().trim();
+        if (prompt.isBlank()) {
+            aiStatusLabel.setText("Please enter what you want to make or buy.");
+            return;
+        }
+
+        String dietary = dietaryFilter.getValue() != null ? dietaryFilter.getValue() : "None";
+        String budgetText = budgetField.getText().trim();
+        Double budget = null;
+        if (!budgetText.isBlank()) {
+            try {
+                budget = Double.parseDouble(budgetText);
+            } catch (NumberFormatException e) {
+                aiStatusLabel.setText("Please enter a valid budget amount.");
+                return;
+            }
+        }
+
+        aiStatusLabel.setText("Generating your grocery list...");
+        aiResultTable.getItems().clear();
+
+        final Double finalBudget = budget;
+        new Thread(() -> {
+            try {
+                Map<String, Object> requestBody = new HashMap<>();
+                requestBody.put("prompt", prompt);
+                requestBody.put("dietaryFilter", dietary);
+                if (finalBudget != null) requestBody.put("budget", finalBudget);
+
+                JsonNode result = ApiService.postAI("/ai/grocery-list", requestBody);
+                ObservableList<JsonNode> list = FXCollections.observableArrayList();
+                result.forEach(list::add);
+                Platform.runLater(() -> {
+                    aiResultTable.setItems(list);
+                    aiStatusLabel.setText("Found " + list.size() + " items for your list.");
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> aiStatusLabel.setText("Error: " + e.getMessage()));
+            }
+        }).start();
     }
 
     private void loadProducts() {
@@ -241,7 +531,13 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
-                Platform.runLater(() -> shopTable.setItems(list));
+                displayedProducts = list;
+
+                Platform.runLater(() -> {
+                    setupCategories();
+                    currentPage = 0;
+                    showProductPage();
+                });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
             }
@@ -249,23 +545,47 @@ public class CustomerController {
     }
 
     private void setupCategories() {
-        categoryFilter.setItems(FXCollections.observableArrayList(
-                "All", "Produce", "Dairy", "Meat", "Seafood", "Bakery", "Frozen", "Beverages", "Pantry"));
+
+        java.util.Set<String> categories = new java.util.TreeSet<>();
+
+        allProducts.forEach(product -> {
+            String category = product.path("category").asText();
+
+            if (!category.isBlank()) {
+                categories.add(category);
+            }
+        });
+
+        ObservableList<String> categoryList =
+                FXCollections.observableArrayList();
+
+        categoryList.add("All");
+        categoryList.addAll(categories);
+
+        categoryFilter.setItems(categoryList);
         categoryFilter.setValue("All");
     }
 
     @FXML
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
+
         if (cat == null || cat.equals("All")) {
-            shopTable.setItems(allProducts);
+            displayedProducts = allProducts;
         } else {
-            ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
+            displayedProducts = FXCollections.observableArrayList();
+
             allProducts.forEach(p -> {
-                if (p.path("category").asText().equals(cat)) filtered.add(p);
+                if (p.path("category").asText().equals(cat)) {
+                    displayedProducts.add(p);
+                }
             });
-            shopTable.setItems(filtered);
+
+
         }
+
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -274,11 +594,13 @@ public class CustomerController {
         ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
         allProducts.forEach(p -> {
             if (p.path("name").asText().toLowerCase().contains(q) ||
-                p.path("category").asText().toLowerCase().contains(q)) {
+                    p.path("category").asText().toLowerCase().contains(q)) {
                 filtered.add(p);
             }
         });
-        shopTable.setItems(filtered);
+        displayedProducts = filtered;
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -290,20 +612,26 @@ public class CustomerController {
         double total = cartItems.stream().mapToDouble(CartItem::getSubtotal).sum();
         if (SessionManager.getBalance() < total) {
             showAlert("Insufficient Balance",
-                "Cart total is $" + String.format("%.2f", total) +
-                " but your balance is $" + String.format("%.2f", SessionManager.getBalance()) +
-                ".\nPlease top up your wallet.");
+                    "Cart total is $" + String.format("%.2f", total) +
+                            " but your balance is $" + String.format("%.2f", SessionManager.getBalance()) +
+                            ".\nPlease top up your wallet.");
             return;
         }
         List<CartItem> snapshot = new ArrayList<>(cartItems);
         new Thread(() -> {
             try {
+                List<Map<String, Object>> itemsList = new ArrayList<>();
                 for (CartItem item : snapshot) {
-                    ApiService.postWithStatus("/orders/purchase", Map.of(
-                            "userId", SessionManager.getUserId(),
+                    itemsList.add(Map.of(
                             "productId", item.getProductId(),
-                            "quantity", item.getQuantity()));
+                            "quantity", item.getQuantity()
+                    ));
                 }
+                Map<String, Object> requestBody = Map.of(
+                        "userId", SessionManager.getUserId(),
+                        "items", itemsList
+                );
+                ApiService.postWithStatus("/orders/purchase", requestBody);
                 JsonNode userNode = ApiService.get("/users/" + SessionManager.getUserId());
                 double newBalance = userNode.path("balance").asDouble();
                 SessionManager.setBalance(newBalance);
@@ -314,9 +642,9 @@ public class CustomerController {
                     updateBalanceDisplay();
                     loadProducts();
                     showInfo("Checkout Successful",
-                        snapshot.size() + " item(s) purchased.\nTotal charged: $" +
-                        String.format("%.2f", total) +
-                        "\nNew balance: $" + String.format("%.2f", newBalance));
+                            snapshot.size() + " item(s) purchased.\nTotal charged: $" +
+                                    String.format("%.2f", total) +
+                                    "\nNew balance: $" + String.format("%.2f", newBalance));
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Checkout Failed", e.getMessage()));
@@ -365,9 +693,10 @@ public class CustomerController {
         }
     }
 
-    @FXML public void showShop() { switchPane(shopPane); setActive(navShop); loadProducts(); }
+    @FXML public void showShop() { switchPane(shopPane); setActive(navShop);}
     @FXML public void showCart() { switchPane(cartPane); setActive(navCart); updateCartTotal(); }
     @FXML public void showWallet() { switchPane(walletPane); setActive(navWallet); updateBalanceDisplay(); }
+    @FXML public void showAI() { switchPane(aiPane); setActive(navAI); }
 
     @FXML
     public void showOrders() {
@@ -382,6 +711,62 @@ public class CustomerController {
         }).start();
     }
 
+    private void showReceiptDetails(JsonNode order) {
+        VBox overlay = new VBox();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+        overlay.setAlignment(Pos.CENTER);
+
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(20));
+        card.setMaxWidth(400);
+        card.getStyleClass().add("card");
+
+        Label title = new Label("Receipt #" + order.path("id").asText());
+        title.getStyleClass().add("page-title");
+
+        Label subtitle = new Label("Order Details");
+        subtitle.getStyleClass().add("stat-label");
+
+        VBox itemsBox = new VBox(10);
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                VBox itemBox = new VBox(4);
+                itemBox.getStyleClass().add("stat-card");
+
+                Label nameLabel = new Label(item.path("productName").asText());
+                nameLabel.getStyleClass().add("section-title");
+
+                Label detailsLabel = new Label(
+                        "Qty: " + item.path("quantity").asInt()
+                                + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                                + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                );
+                detailsLabel.getStyleClass().add("stat-label");
+
+                itemBox.getChildren().addAll(nameLabel, detailsLabel);
+                itemsBox.getChildren().add(itemBox);
+            }
+        }
+
+        Label total = new Label("Total: $" + String.format("%.2f", order.path("totalPrice").asDouble()));
+        total.getStyleClass().add("stat-value-green");
+
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-primary");
+        closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
+
+        card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
+        overlay.getChildren().add(card);
+
+        overlay.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlay) rootStack.getChildren().remove(overlay);
+        });
+
+        rootStack.getChildren().add(overlay);
+    }
+
     @FXML
     public void handleLogout() {
         SessionManager.clear();
@@ -389,11 +774,12 @@ public class CustomerController {
     }
 
     private void switchPane(VBox target) {
-        shopPane.setVisible(false); shopPane.setManaged(false);
+        shopPane.setVisible(false);   shopPane.setManaged(false);
         ordersPane.setVisible(false); ordersPane.setManaged(false);
         walletPane.setVisible(false); walletPane.setManaged(false);
-        cartPane.setVisible(false); cartPane.setManaged(false);
-        target.setVisible(true); target.setManaged(true);
+        cartPane.setVisible(false);   cartPane.setManaged(false);
+        aiPane.setVisible(false);     aiPane.setManaged(false);
+        target.setVisible(true);      target.setManaged(true);
     }
 
     private void setActive(Button active) {
@@ -401,6 +787,7 @@ public class CustomerController {
         navOrders.getStyleClass().remove("nav-active");
         navWallet.getStyleClass().remove("nav-active");
         navCart.getStyleClass().remove("nav-active");
+        navAI.getStyleClass().remove("nav-active");
         if (!active.getStyleClass().contains("nav-active")) active.getStyleClass().add("nav-active");
     }
 
@@ -418,5 +805,25 @@ public class CustomerController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void showProductPage() {
+        productGrid.getChildren().clear();
+
+        int start = currentPage * pageSize;
+        int end = Math.min(start + pageSize, displayedProducts.size());
+
+        for (int i = start; i < end; i++) {
+            productGrid.getChildren().add(createProductCard(displayedProducts.get(i)));
+
+
+        }
+
+        int totalPages =
+                (int) Math.ceil((double) displayedProducts.size() / pageSize);
+
+        pageLabel.setText(
+                "Page " + (currentPage + 1) + " of " + totalPages
+        );
     }
 }

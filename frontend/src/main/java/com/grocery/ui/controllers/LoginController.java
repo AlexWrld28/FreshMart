@@ -8,9 +8,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 
 import java.util.Map;
 
@@ -19,11 +21,16 @@ public class LoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
+    @FXML private TextField passwordVisible;
+    @FXML private Button togglePassword;
+    @FXML private ImageView logoImage;
 
     @FXML
     public void handleLogin() {
         String email = emailField.getText().trim();
-        String password = passwordField.getText().trim();
+        String password = passwordField.isVisible()
+                ? passwordField.getText().trim()
+                : passwordVisible.getText().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
             errorLabel.setText("Please enter your email and password.");
@@ -70,4 +77,31 @@ public class LoginController {
             errorLabel.setText("Error loading register page.");
         }
     }
+
+    @FXML
+    public void togglePasswordVisibility() {
+        if (passwordField.isVisible()) {
+            passwordVisible.setText(passwordField.getText());
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            passwordVisible.setVisible(true);
+            passwordVisible.setManaged(true);
+            togglePassword.setText("Hide");
+        } else {
+            passwordField.setText(passwordVisible.getText());
+            passwordVisible.setVisible(false);
+            passwordVisible.setManaged(false);
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            togglePassword.setText("Show");
+        }
+    }
+
+    public void initialize() {
+        java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/images/Logo.png");
+        if (logoImage != null && imgUrl != null) {
+            logoImage.setImage(new javafx.scene.image.Image(imgUrl.toExternalForm()));
+        }
+    }
+
 }

@@ -1,14 +1,20 @@
 target/
+backend/target/
+frontend/target/
+
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
 .kotlin
 
+### Local config and data ###
+backend/src/main/resources/application.properties
+backend/.env
+*.db
+
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr

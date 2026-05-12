@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.ai/mcp/mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/db-forest-config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/ms_17_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.run/Grocery App Run.run.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/grocery_backup.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/ProductCsvImporter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/AIController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/OrderItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/service/AIService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/BigBasket.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Bakery, Cakes &amp; Dairy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Beauty &amp; Hygien.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Beverages.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Cleaning &amp; Household.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Default.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Fruits and Vegetables.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Snacks &amp; Branded Foods.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/wholeMilk.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/grocery.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/CartItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Customer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/InventorySnapshot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/LaneSnapshot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Product.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Receipt.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/SimulationConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/SimulationResult.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StockItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreEvent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreEventType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreSnapshot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation$CheckoutLane.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation$CustomerOrder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager$InventoryRecord.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager$Reservation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/StoreListener.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/org/example/grocery/GroceryStoreSimulationSelfTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/grocery-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/grocery-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/grocery.db" beforeDir="false" afterPath="$PROJECT_DIR$/backend/grocery.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/DataSeeder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/dto/PurchaseRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/GroceryApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/config/DataSeeder.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/config/DataSeeder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AuthController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/ProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/ProductController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/LoginRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/PurchaseRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/PurchaseRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/dto/TopUpRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/Order.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/Product.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/model/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/repository/OrderRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/repository/ProductRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/repository/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/MainApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/MainApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/services/ApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/services/ApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/AdminDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Register.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/MainApp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CartItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/RegisterController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/services/ApiService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/util/SessionManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/AdminDashboard.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/CustomerDashboard.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/Login.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/Register.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/classes/module-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;dunn7&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AlexWrld28/FreshMart.git&quot;,
+    &quot;accountId&quot;: &quot;b05f696e-aab8-4cfc-92a6-fc4403bcafeb&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="3CmObQ4Nm9kQUNKNliKv6QqD3Qr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainApp.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.GroceryApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "Merging Multithreading",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app/backend/.env",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jake\IdeaProjects\grocery-app\backend" />
+      <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test" />
+      <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test\backend" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Compound.Grocery App Run">
+    <configuration name="MainApp" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.grocery.ui.MainApp" />
+      <module name="grocery-frontend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.grocery.ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="GroceryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="grocery-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.grocery.GroceryApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="true" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH="backend/.env" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.MainApp" />
+      <item itemvalue="Compound.Grocery App Run" />
+      <item itemvalue="Spring Boot.GroceryApplication" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="" />
+      <created>1776987350578</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776987350578</updated>
+      <workItem from="1776987352074" duration="10034000" />
+      <workItem from="1778034754797" duration="858000" />
+      <workItem from="1778035619925" duration="345000" />
+      <workItem from="1778035973066" duration="187000" />
+      <workItem from="1778036167425" duration="155000" />
+      <workItem from="1778036332663" duration="71000" />
+      <workItem from="1778036413837" duration="97000" />
+      <workItem from="1778036520744" duration="237000" />
+      <workItem from="1778036765243" duration="1477000" />
+      <workItem from="1778340620027" duration="502000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.db" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+</project>

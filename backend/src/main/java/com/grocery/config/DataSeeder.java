@@ -14,16 +14,20 @@ public class DataSeeder {
     @Bean
     public CommandLineRunner seedData(UserRepository userRepository, ProductRepository productRepository) {
         return args -> {
-            if (userRepository.count() == 0) {
-                User admin = new User();
+            User admin = userRepository.findByEmail("admin@freshmart.com").orElse(null);
+
+            if (admin == null) {
+                admin = new User();
                 admin.setEmail("admin@freshmart.com");
                 admin.setPassword("admin123");
-                admin.setFullName("James Carter");
-                admin.setRole("ADMIN");
-                admin.setEnabled(true);
-                admin.setBalance(0.0);
-                userRepository.save(admin);
             }
+
+            admin.setFullName("Emir Usta");
+            admin.setRole("ADMIN");
+            admin.setEnabled(true);
+            admin.setBalance(0.0);
+
+            userRepository.save(admin);
 
             if (productRepository.count() == 0) {
                 String[][] products = {

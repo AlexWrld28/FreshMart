@@ -1,5 +1,9 @@
 package com.grocery.ui.controllers;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.grocery.ui.MainApp;
 import com.grocery.ui.services.ApiService;
@@ -10,17 +14,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDateTime;
@@ -28,7 +23,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 public class AdminController {
+
+    @FXML private StackPane rootStack;
 
     @FXML private Label welcomeLabel;
     @FXML private VBox dashboardPane, productsPane, customersPane, ordersPane;
@@ -67,8 +71,24 @@ public class AdminController {
                                     TableColumn<JsonNode, String> statusCol, TableColumn<JsonNode, String> dateCol,
                                     TableView<JsonNode> table) {
         custCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("userFullName").asText()));
-        prodCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("productName").asText()));
-        qtyCol.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
+
+        prodCol.setText("Receipt #");
+        qtyCol.setText("Items");
+
+        prodCol.setCellValueFactory(d ->
+                new SimpleStringProperty("#" + d.getValue().path("id").asText())
+        );
+
+        qtyCol.setCellValueFactory(d -> {
+            JsonNode items = d.getValue().path("items");
+
+            if (!items.isArray()) {
+                return new SimpleStringProperty("0");
+            }
+
+            return new SimpleStringProperty(String.valueOf(items.size()));
+        });
+
         totalCol.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("totalPrice").asDouble())));
         statusCol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("status").asText()));
         dateCol.setCellValueFactory(d -> {
@@ -80,28 +100,147 @@ public class AdminController {
                 return new SimpleStringProperty(raw);
             }
         });
+
+        table.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showReceiptDetails(row.getItem());
+                }
+            });
+
+            return row;
+        });
+
+    }
+
+    private void showReceiptDetails(JsonNode order) {
+        VBox overlay = new VBox();
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.4);");
+        overlay.setAlignment(Pos.CENTER);
+
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(20));
+        card.setMaxWidth(500);
+        card.getStyleClass().add("card");
+
+        Label title = new Label("Receipt #" + order.path("id").asText());
+        title.getStyleClass().add("page-title");
+
+        Label subtitle = new Label("Order Details");
+        subtitle.getStyleClass().add("stat-label");
+
+        VBox itemsBox = new VBox(10);
+
+        JsonNode items = order.path("items");
+
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                VBox itemBox = new VBox(6);
+                itemBox.getStyleClass().add("stat-card");
+
+                Label nameLabel = new Label(item.path("productName").asText());
+                nameLabel.getStyleClass().add("section-title");
+                nameLabel.setWrapText(true);
+
+                Label detailsLabel = new Label(
+                        "Qty: " + item.path("quantity").asInt()
+                                + " | Each: $" + String.format("%.2f", item.path("priceEach").asDouble())
+                                + " | Total: $" + String.format("%.2f", item.path("totalPrice").asDouble())
+                );
+                detailsLabel.getStyleClass().add("stat-label");
+
+                itemBox.getChildren().addAll(nameLabel, detailsLabel);
+                itemsBox.getChildren().add(itemBox);
+            }
+        }
+
+        Label total = new Label("Total: $" +
+                String.format("%.2f", order.path("totalPrice").asDouble()));
+        total.getStyleClass().add("stat-value-green");
+
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-primary");
+        closeBtn.setOnAction(e -> rootStack.getChildren().remove(overlay));
+
+        card.getChildren().addAll(title, subtitle, new Separator(), itemsBox, total, closeBtn);
+
+        overlay.getChildren().add(card);
+
+        overlay.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlay) {
+                rootStack.getChildren().remove(overlay);
+            }
+        });
+
+        rootStack.getChildren().add(overlay);
     }
 
     private void setupProductsTable() {
+
+        productsTable.setEditable(true);
+
         colProdName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("name").asText()));
         colProdCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("category").asText()));
         colProdPrice.setCellValueFactory(d -> new SimpleStringProperty("$" + String.format("%.2f", d.getValue().path("price").asDouble())));
-        colProdQty.setCellValueFactory(d -> {
-            int qty = d.getValue().path("quantity").asInt();
-            return new SimpleStringProperty(qty <= 5 ? qty + " (Low)" : String.valueOf(qty));
-        });
+        colProdQty.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().path("quantity").asInt())));
         colProdDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().path("description").asText()));
+
+        colProdName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdPrice.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdQty.setCellFactory(TextFieldTableCell.forTableColumn());
+        colProdDesc.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        colProdName.setOnEditCommit(e -> updateField(e.getRowValue(), "name", e.getNewValue()));
+        colProdCategory.setOnEditCommit(e -> updateField(e.getRowValue(), "category", e.getNewValue()));
+
+        colProdPrice.setOnEditCommit(e -> {
+            try {
+                String val = e.getNewValue().replace("$", "");
+                double price = Double.parseDouble(val);
+                updateField(e.getRowValue(), "price", price);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid price");
+            }
+        });
+
+        colProdQty.setOnEditCommit(e -> {
+            try {
+                int qty = Integer.parseInt(e.getNewValue());
+                updateField(e.getRowValue(), "quantity", qty);
+            } catch (Exception ex) {
+                showAlert("Error", "Invalid quantity");
+            }
+        });
+
+        colProdDesc.setOnEditCommit(e -> updateField(e.getRowValue(), "description", e.getNewValue()));
+
+        productsTable.setRowFactory(tv -> {
+            TableRow<JsonNode> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    productsTable.edit(row.getIndex(), colProdName);
+                }
+            });
+            return row;
+        });
+
         colProdActions.setCellFactory(col -> new TableCell<>() {
             private final Button editBtn = new Button("Edit");
             private final Button delBtn = new Button("Delete");
             private final HBox box = new HBox(6, editBtn, delBtn);
+
             {
                 editBtn.getStyleClass().add("btn-edit");
                 delBtn.getStyleClass().add("btn-delete");
+
                 editBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         showProductDialog(getTableView().getItems().get(getIndex()));
                 });
+
                 delBtn.setOnAction(e -> {
                     if (getIndex() < getTableView().getItems().size())
                         deleteProduct(getTableView().getItems().get(getIndex()).get("id").asLong());
@@ -255,12 +394,45 @@ public class AdminController {
         descF.setPromptText("Description");
         descF.getStyleClass().add("login-field");
 
+        /**
+         * Implementing and testing ImagePath @jomarLub17
+         */
+
+        TextField imageF = new TextField(product == null ? "" : product.path("imagePath").asText());
+        imageF.setPromptText("No image selected");
+        imageF.getStyleClass().add("login-field");
+        imageF.setEditable(false);
+
+        Button browseBtn = new Button("Browse+");
+        browseBtn.getStyleClass().add("btn-edit");
+        browseBtn.setOnAction(e -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Select Product Image");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+            );
+            File file = chooser.showOpenDialog(dialog.getOwner());
+            if (file != null) {
+                try {
+                    Path dest = Paths.get("src/main/resources/com/grocery/ui/images/" + file.getName());
+                    Files.createDirectories(dest.getParent());
+                    Files.copy(file.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+                    imageF.setText("images/" + file.getName());
+                } catch (Exception ex) {
+                    showAlert("Error", "Could not copy image: " + ex.getMessage());
+                }
+            }
+        });
+
+        HBox imageRow = new HBox(8, imageF, browseBtn);
+
         form.getChildren().addAll(
             fieldLabel("Name"), nameF,
             fieldLabel("Category"), catF,
             fieldLabel("Price ($)"), priceF,
             fieldLabel("Quantity"), qtyF,
-            fieldLabel("Description"), descF
+            fieldLabel("Description"), descF,
+            fieldLabel("Image"), imageRow
         );
         dialog.getDialogPane().setContent(form);
 
@@ -281,7 +453,8 @@ public class AdminController {
                     "category", catF.getValue(),
                     "price", price,
                     "quantity", qty,
-                    "description", descF.getText().trim()
+                    "description", descF.getText().trim(),
+                        "imagePath", imageF.getText().trim()
                 );
                 new Thread(() -> {
                     try {
@@ -385,4 +558,26 @@ public class AdminController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+    private void updateField(JsonNode product, String field, Object value) {
+
+        long id = product.get("id").asLong();
+
+        Map<String, Object> body = Map.of(
+                "name", field.equals("name") ? value : product.get("name").asText(),
+                "category", field.equals("category") ? value : product.get("category").asText(),
+                "price", field.equals("price") ? value : product.get("price").asDouble(),
+                "quantity", field.equals("quantity") ? value : product.get("quantity").asInt(),
+                "description", field.equals("description") ? value : product.get("description").asText()
+        );
+
+        new Thread(() -> {
+            try {
+                ApiService.put("/products/" + id, body);
+                Platform.runLater(this::loadAllData);
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("Error", "Update failed"));
+            }
+        }).start();
+    }
+
 }

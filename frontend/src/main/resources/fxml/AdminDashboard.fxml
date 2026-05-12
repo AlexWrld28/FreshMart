@@ -9,106 +9,130 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TextField?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.grocery.ui.controllers.AdminController"
-            styleClass="main-root">
-    <top>
-        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
-            <Label text="FreshMart" styleClass="topbar-brand"/>
-            <Label fx:id="welcomeLabel" styleClass="topbar-user" HBox.hgrow="ALWAYS"/>
-            <Button text="Logout" onAction="#handleLogout" styleClass="btn-logout"/>
-        </HBox>
-    </top>
-    <left>
-        <VBox styleClass="sidebar" spacing="4" minWidth="200">
-            <Label text="ADMIN PANEL" styleClass="sidebar-section"/>
-            <Button fx:id="navDashboard" text="Dashboard" onAction="#showDashboard" maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button fx:id="navProducts" text="Products" onAction="#showProducts" maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button fx:id="navCustomers" text="Customers" onAction="#showCustomers" maxWidth="Infinity" styleClass="nav-btn"/>
-            <Button fx:id="navOrders" text="Orders" onAction="#showOrders" maxWidth="Infinity" styleClass="nav-btn"/>
-        </VBox>
-    </left>
-    <center>
-        <StackPane fx:id="contentArea" styleClass="content-area">
+<StackPane fx:id="rootStack"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.grocery.ui.controllers.AdminController"
+           styleClass="main-root">
 
-            <VBox fx:id="dashboardPane" spacing="24" styleClass="dashboard-pane">
-                <Label text="Dashboard Overview" styleClass="page-title"/>
-                <HBox spacing="16">
-                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                        <Label text="Total Revenue" styleClass="stat-label"/>
-                        <Label fx:id="revenueLabel" text="loading..." styleClass="stat-value-green"/>
-                    </VBox>
-                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                        <Label text="Total Orders" styleClass="stat-label"/>
-                        <Label fx:id="ordersCountLabel" text="loading..." styleClass="stat-value"/>
-                    </VBox>
-                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                        <Label text="Products" styleClass="stat-label"/>
-                        <Label fx:id="productsCountLabel" text="loading..." styleClass="stat-value"/>
-                    </VBox>
-                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
-                        <Label text="Customers" styleClass="stat-label"/>
-                        <Label fx:id="customersCountLabel" text="loading..." styleClass="stat-value"/>
-                    </VBox>
-                </HBox>
-                <Label text="Recent Orders" styleClass="section-title"/>
-                <TableView fx:id="recentOrdersTable" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colOrderCustomer" text="Customer" prefWidth="180"/>
-                        <TableColumn fx:id="colOrderProduct" text="Product" prefWidth="200"/>
-                        <TableColumn fx:id="colOrderQty" text="Qty" prefWidth="60"/>
-                        <TableColumn fx:id="colOrderTotal" text="Total" prefWidth="100"/>
-                        <TableColumn fx:id="colOrderStatus" text="Status" prefWidth="100"/>
-                        <TableColumn fx:id="colOrderDate" text="Date" prefWidth="160"/>
-                    </columns>
-                </TableView>
+    <BorderPane styleClass="main-root">
+        <top>
+            <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="16">
+                <Label text="FreshMart" styleClass="topbar-brand"/>
+                <Label fx:id="welcomeLabel" styleClass="topbar-user" HBox.hgrow="ALWAYS"/>
+                <Button text="Logout" onAction="#handleLogout" styleClass="btn-logout"/>
+            </HBox>
+        </top>
+        <left>
+            <VBox styleClass="sidebar" spacing="8" minWidth="220">
+                <Label text="ADMIN PANEL" styleClass="sidebar-section"/>
+                <Button fx:id="navDashboard" text="Dashboard" onAction="#showDashboard" maxWidth="Infinity" styleClass="nav-btn"/>
+                <Button fx:id="navProducts" text="Products" onAction="#showProducts" maxWidth="Infinity" styleClass="nav-btn"/>
+                <Button fx:id="navCustomers" text="Customers" onAction="#showCustomers" maxWidth="Infinity" styleClass="nav-btn"/>
+                <Button fx:id="navOrders" text="Orders" onAction="#showOrders" maxWidth="Infinity" styleClass="nav-btn"/>
             </VBox>
+        </left>
+        <center>
+            <StackPane fx:id="contentArea" styleClass="content-area">
 
-            <VBox fx:id="productsPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="Products" styleClass="page-title"/>
-                    <TextField fx:id="productSearchField" promptText="Search products..." styleClass="search-field" prefWidth="200" onKeyReleased="#searchProducts" HBox.hgrow="ALWAYS"/>
-                    <Button text="Add Product" onAction="#showAddProduct" styleClass="btn-primary"/>
-                </HBox>
-                <TableView fx:id="productsTable" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colProdName" text="Name" prefWidth="200"/>
-                        <TableColumn fx:id="colProdCategory" text="Category" prefWidth="120"/>
-                        <TableColumn fx:id="colProdPrice" text="Price" prefWidth="90"/>
-                        <TableColumn fx:id="colProdQty" text="Stock" prefWidth="90"/>
-                        <TableColumn fx:id="colProdDesc" text="Description" prefWidth="200"/>
-                        <TableColumn fx:id="colProdActions" text="Actions" prefWidth="160"/>
-                    </columns>
-                </TableView>
-            </VBox>
+                <VBox fx:id="dashboardPane" spacing="24" styleClass="dashboard-pane">
+                    <VBox styleClass="page-header-band" spacing="6">
+                        <Label text="Dashboard Overview" styleClass="page-title"/>
+                        <Label text="Revenue, order activity, customer volume, and catalog health." styleClass="page-subtitle"/>
+                    </VBox>
+                    <HBox spacing="16">
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Total Revenue" styleClass="stat-label"/>
+                            <Label fx:id="revenueLabel" text="loading..." styleClass="stat-value-green"/>
+                        </VBox>
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Total Orders" styleClass="stat-label"/>
+                            <Label fx:id="ordersCountLabel" text="loading..." styleClass="stat-value"/>
+                        </VBox>
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Products" styleClass="stat-label"/>
+                            <Label fx:id="productsCountLabel" text="loading..." styleClass="stat-value"/>
+                        </VBox>
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Customers" styleClass="stat-label"/>
+                            <Label fx:id="customersCountLabel" text="loading..." styleClass="stat-value"/>
+                        </VBox>
+                    </HBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <Label text="Recent Orders" styleClass="section-title"/>
+                        <TableView fx:id="recentOrdersTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colOrderCustomer" text="Customer" prefWidth="180"/>
+                                <TableColumn fx:id="colOrderProduct" text="Product" prefWidth="200"/>
+                                <TableColumn fx:id="colOrderQty" text="Qty" prefWidth="60"/>
+                                <TableColumn fx:id="colOrderTotal" text="Total" prefWidth="100"/>
+                                <TableColumn fx:id="colOrderStatus" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="colOrderDate" text="Date" prefWidth="160"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
 
-            <VBox fx:id="customersPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                <Label text="Customers" styleClass="page-title"/>
-                <TableView fx:id="customersTable" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colCustName" text="Full Name" prefWidth="180"/>
-                        <TableColumn fx:id="colCustEmail" text="Email" prefWidth="200"/>
-                        <TableColumn fx:id="colCustBalance" text="Balance" prefWidth="100"/>
-                        <TableColumn fx:id="colCustStatus" text="Status" prefWidth="100"/>
-                        <TableColumn fx:id="colCustActions" text="Actions" prefWidth="200"/>
-                    </columns>
-                </TableView>
-            </VBox>
+                <VBox fx:id="productsPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
+                    <VBox styleClass="page-header-band" spacing="10">
+                        <Label text="Products" styleClass="page-title"/>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="toolbar-panel">
+                            <TextField fx:id="productSearchField" promptText="Search products..." styleClass="search-field" prefWidth="200" onKeyReleased="#searchProducts" HBox.hgrow="ALWAYS"/>
+                            <Button text="Add Product" onAction="#showAddProduct" styleClass="btn-primary"/>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="productsTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colProdName" text="Name" prefWidth="200"/>
+                                <TableColumn fx:id="colProdCategory" text="Category" prefWidth="120"/>
+                                <TableColumn fx:id="colProdPrice" text="Price" prefWidth="90"/>
+                                <TableColumn fx:id="colProdQty" text="Stock" prefWidth="90"/>
+                                <TableColumn fx:id="colProdDesc" text="Description" prefWidth="200"/>
+                                <TableColumn fx:id="colProdActions" text="Actions" prefWidth="160"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
 
-            <VBox fx:id="ordersPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                <Label text="All Orders" styleClass="page-title"/>
-                <TableView fx:id="ordersTable" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colOrdCustomer" text="Customer" prefWidth="180"/>
-                        <TableColumn fx:id="colOrdProduct" text="Product" prefWidth="200"/>
-                        <TableColumn fx:id="colOrdQty" text="Qty" prefWidth="60"/>
-                        <TableColumn fx:id="colOrdTotal" text="Total" prefWidth="100"/>
-                        <TableColumn fx:id="colOrdStatus" text="Status" prefWidth="100"/>
-                        <TableColumn fx:id="colOrdDate" text="Date" prefWidth="160"/>
-                    </columns>
-                </TableView>
-            </VBox>
+                <VBox fx:id="customersPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
+                    <VBox styleClass="page-header-band" spacing="6">
+                        <Label text="Customers" styleClass="page-title"/>
+                        <Label text="Customer status, account balance, and account controls." styleClass="page-subtitle"/>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="customersTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colCustName" text="Full Name" prefWidth="180"/>
+                                <TableColumn fx:id="colCustEmail" text="Email" prefWidth="200"/>
+                                <TableColumn fx:id="colCustBalance" text="Balance" prefWidth="100"/>
+                                <TableColumn fx:id="colCustStatus" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="colCustActions" text="Actions" prefWidth="200"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
 
-        </StackPane>
-    </center>
-</BorderPane>
+                <VBox fx:id="ordersPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
+                    <VBox styleClass="page-header-band" spacing="6">
+                        <Label text="All Orders" styleClass="page-title"/>
+                        <Label text="Full order history across every customer checkout." styleClass="page-subtitle"/>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colOrdCustomer" text="Customer" prefWidth="180"/>
+                                <TableColumn fx:id="colOrdProduct" text="Product" prefWidth="200"/>
+                                <TableColumn fx:id="colOrdQty" text="Qty" prefWidth="60"/>
+                                <TableColumn fx:id="colOrdTotal" text="Total" prefWidth="100"/>
+                                <TableColumn fx:id="colOrdStatus" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="colOrdDate" text="Date" prefWidth="160"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
+
+            </StackPane>
+        </center>
+    </BorderPane>
+
+</StackPane>

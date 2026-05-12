@@ -8,22 +8,28 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Region?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.grocery.ui.controllers.RegisterController"
            styleClass="login-root">
-    <HBox>
-        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="12">
+    <HBox styleClass="login-shell" maxWidth="1120">
+        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="18">
             <Label text="FreshMart" styleClass="login-brand"/>
-            <Label text="Your neighborhood grocery store" styleClass="login-tagline"/>
-            <Label text="Fresh produce, dairy, meats and more" styleClass="login-sub"/>
+            <Label text="Build your account and start shopping faster." styleClass="login-hero-title" wrapText="true"/>
+            <Label text="A simple setup for groceries, orders, wallet balance, and personalized lists." styleClass="login-tagline" wrapText="true"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox styleClass="login-highlight" spacing="8">
+                <Label text="Your neighborhood grocery store" styleClass="login-sub"/>
+            </VBox>
         </VBox>
         <VBox styleClass="login-right" alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
+            <VBox styleClass="auth-panel" spacing="20" maxWidth="380">
             <VBox spacing="6">
                 <Label text="Create Account" styleClass="login-title"/>
                 <Label text="Join FreshMart today" styleClass="login-subtitle"/>
             </VBox>
-            <VBox spacing="14" maxWidth="320">
+            <VBox spacing="14">
                 <VBox spacing="6">
                     <Label text="Full Name" styleClass="field-label"/>
                     <TextField fx:id="nameField" promptText="Enter full name" styleClass="login-field"/>
@@ -34,7 +40,30 @@
                 </VBox>
                 <VBox spacing="6">
                     <Label text="Password" styleClass="field-label"/>
-                    <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                    <StackPane>
+                        <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="login-field"/>
+                        <TextField fx:id="passwordVisible" promptText="Enter password" styleClass="login-field" visible="false" managed="false"/>
+                        <Button fx:id="togglePassword" text="👁" onAction="#togglePasswordVisibility" styleClass="btn-eye"
+                                StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+                </VBox>
+
+
+                <VBox fx:id="requirementsBox" spacing="4" styleClass="requirements-box">
+                    <Label fx:id="reqLength" text="✗  At least 8 characters" styleClass="req-unmet"/>
+                    <Label fx:id="reqUpper" text="✗  One uppercase letter" styleClass="req-unmet"/>
+                    <Label fx:id="reqNumber" text="✗  One number" styleClass="req-unmet"/>
+                    <Label fx:id="reqSpecial" text="✗  One special character (!@#$...)" styleClass="req-unmet"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Confirm Password" styleClass="field-label"/>
+                    <StackPane>
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" styleClass="login-field"/>
+                        <TextField fx:id="confirmPasswordVisible" promptText="Confirm password" styleClass="login-field" visible="false" managed="false"/>
+                        <Button fx:id="toggleConfirmPassword" text="👁" onAction="#toggleConfirmPasswordVisibility" styleClass="btn-eye"
+                                StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
                 </VBox>
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
                 <Button text="Create Account" onAction="#handleRegister" styleClass="btn-primary" maxWidth="Infinity"/>
@@ -43,6 +72,7 @@
                     <Label text="Already have an account?" styleClass="login-subtitle"/>
                     <Hyperlink text="Sign in" onAction="#showLogin" styleClass="link-text"/>
                 </HBox>
+            </VBox>
             </VBox>
         </VBox>
     </HBox>
