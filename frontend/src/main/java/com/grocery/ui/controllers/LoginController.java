@@ -99,7 +99,7 @@ public class LoginController {
 
     public void initialize() {
         java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/images/Logo.png");
-        if (imgUrl != null) {
+        if (logoImage != null && imgUrl != null) {
             logoImage.setImage(new javafx.scene.image.Image(imgUrl.toExternalForm()));
         }
     }
