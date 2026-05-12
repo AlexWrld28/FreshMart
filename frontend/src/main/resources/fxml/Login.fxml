@@ -11,21 +11,28 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.Region?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.grocery.ui.controllers.LoginController"
            styleClass="login-root">
-    <HBox>
-        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="TOP_CENTER" spacing="12">
-            <ImageView fx:id="logoImage" fitWidth="300" preserveRatio="true"/>
-            <Label text="Your neighborhood grocery store" styleClass="login-tagline"/>
-            <Label text="Fresh produce, dairy, meats and more" styleClass="login-sub"/>
+    <HBox styleClass="login-shell" maxWidth="1120">
+        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="18">
+            <Label text="FreshMart" styleClass="login-brand"/>
+            <Label text="Fresh groceries with a cleaner shopping flow." styleClass="login-hero-title" wrapText="true"/>
+            <Label text="Produce, pantry staples, weekly essentials, and fast checkout in one place." styleClass="login-tagline" wrapText="true"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox styleClass="login-highlight" spacing="8">
+                <ImageView fx:id="logoImage" fitWidth="240" preserveRatio="true"/>
+                <Label text="Your neighborhood grocery store" styleClass="login-sub"/>
+            </VBox>
         </VBox>
         <VBox styleClass="login-right" alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
+            <VBox styleClass="auth-panel" spacing="20" maxWidth="380">
             <VBox spacing="6">
                 <Label text="Welcome Back" styleClass="login-title"/>
                 <Label text="Sign in to continue" styleClass="login-subtitle"/>
             </VBox>
-            <VBox spacing="14" maxWidth="320">
+            <VBox spacing="14">
                 <VBox spacing="6">
                     <Label text="Email" styleClass="field-label"/>
                     <TextField fx:id="emailField" promptText="Enter email" styleClass="login-field"/>
@@ -46,6 +53,7 @@
                     <Label text="New customer?" styleClass="login-subtitle"/>
                     <Hyperlink text="Create account" onAction="#showRegister" styleClass="link-text"/>
                 </HBox>
+            </VBox>
             </VBox>
         </VBox>
     </HBox>
