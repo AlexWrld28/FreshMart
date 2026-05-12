@@ -3,3 +3,4 @@ backend/target/
 frontend/target/
 .idea/
 *.db
+backend/.env

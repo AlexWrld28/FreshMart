@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Component
+//@Component
 public class ProductCsvImporter implements CommandLineRunner {
 
     private final ProductRepository productRepository;
@@ -25,8 +25,6 @@ public class ProductCsvImporter implements CommandLineRunner {
         //if (productRepository.count() > 0) {
         //    return; //Prevent duplicate imports every time app starts
         //}
-
-        productRepository.deleteAll();
 
         try (Reader reader = new InputStreamReader(
                 getClass().getResourceAsStream("/BigBasket.csv"))) {

@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/ProductCsvImporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/config/ProductCsvImporter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/CustomerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CartItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CartItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/CustomerDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/fxml/CustomerDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grocery.db" beforeDir="false" afterPath="$PROJECT_DIR$/grocery.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +70,7 @@
     "git-widget-placeholder": "New__item__list",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app/backend",
+    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app/backend/.env",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -112,6 +108,17 @@
     <configuration name="GroceryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="grocery-backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.grocery.GroceryApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="true" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH="backend/.env" />
+        </ENTRIES>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
