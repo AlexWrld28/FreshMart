@@ -50,6 +50,9 @@ public class AuthController {
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Email already in use"));
         }
+        if (!newUser.getEmail().matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$")) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Invalid email format"));
+        }
         newUser.setRole("CUSTOMER");
         newUser.setEnabled(true);
         newUser.setBalance(0.0);

@@ -9,12 +9,14 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Separator?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.grocery.ui.controllers.LoginController"
            styleClass="login-root">
     <HBox>
-        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="12">
-            <Label text="FreshMart" styleClass="login-brand"/>
+        <VBox styleClass="login-left" HBox.hgrow="ALWAYS" alignment="TOP_CENTER" spacing="12">
+            <ImageView fx:id="logoImage" fitWidth="300" preserveRatio="true"/>
             <Label text="Your neighborhood grocery store" styleClass="login-tagline"/>
             <Label text="Fresh produce, dairy, meats and more" styleClass="login-sub"/>
         </VBox>
