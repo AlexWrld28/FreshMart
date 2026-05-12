@@ -51,6 +51,11 @@
                         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="shop-scroll">
                             <FlowPane fx:id="productGrid" hgap="16" vgap="16" styleClass="product-grid"/>
                         </ScrollPane>
+                        <HBox alignment="BOTTOM_RIGHT" spacing="12">
+                            <Label fx:id="pageLabel" text="Page 1 of 1" styleClass="topbar-balance"/>
+                            <Button text="Previous" onAction="#handlePreviousPage" styleClass="btn-primary"/>
+                            <Button text="Next" onAction="#handleNextPage" styleClass="btn-primary"/>
+                        </HBox>
                     </VBox>
                 </VBox>
 

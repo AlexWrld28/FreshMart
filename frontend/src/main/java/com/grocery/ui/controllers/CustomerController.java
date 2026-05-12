@@ -12,17 +12,21 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CustomerController {
 
@@ -53,8 +57,17 @@ public class CustomerController {
     @FXML private ComboBox<String> dietaryFilter;
     @FXML private TextField budgetField;
 
+    @FXML private Label pageLabel;
+
     private ObservableList<JsonNode> allProducts = FXCollections.observableArrayList();
     private final ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
+    private ObservableList<JsonNode> displayedProducts = FXCollections.observableArrayList();
+
+    private int currentPage = 0;
+    private final int pageSize = 50;
+    private static final double PRODUCT_IMAGE_WIDTH = 160;
+    private static final double PRODUCT_IMAGE_HEIGHT = 120;
+    private final Map<String, Image> imageCache = new ConcurrentHashMap<>();
 
     public static class CartItem {
         private final long productId;
@@ -92,9 +105,24 @@ public class CustomerController {
         ));
         dietaryFilter.setValue("None");
         loadProducts();
-        setupCategories();
         cartBadge.setVisible(false);
         cartBadge.setManaged(false);
+    }
+
+    @FXML
+    public void handleNextPage() {
+        if ((currentPage + 1) * pageSize < displayedProducts.size()) {
+            currentPage++;
+            showProductPage();
+        }
+    }
+
+    @FXML
+    public void handlePreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            showProductPage();
+        }
     }
 
     private void updateBalanceDisplay() {
@@ -131,29 +159,10 @@ public class CustomerController {
 
         javafx.scene.layout.StackPane imagePlaceholder = new javafx.scene.layout.StackPane();
         imagePlaceholder.getStyleClass().add("product-image-placeholder");
-        imagePlaceholder.setPrefSize(160, 120);
+        imagePlaceholder.setPrefSize(PRODUCT_IMAGE_WIDTH, PRODUCT_IMAGE_HEIGHT);
 
         String imagePath = product.path("imagePath").asText();
-        if (!imagePath.isEmpty()) {
-            try {
-                java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
-                if (imgUrl != null) {
-                    javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(
-                            new javafx.scene.image.Image(imgUrl.toExternalForm())
-                    );
-                    imageView.setFitWidth(160);
-                    imageView.setFitHeight(120);
-                    imageView.setPreserveRatio(true);
-                    imagePlaceholder.getChildren().add(imageView);
-                } else {
-                    addEmojiPlaceholder(imagePlaceholder);
-                }
-            } catch (Exception e) {
-                addEmojiPlaceholder(imagePlaceholder);
-            }
-        } else {
-            addEmojiPlaceholder(imagePlaceholder);
-        }
+        addProductImage(imagePlaceholder, imagePath, category);
 
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add("product-card-name");
@@ -180,10 +189,121 @@ public class CustomerController {
         return card;
     }
 
-    private void addEmojiPlaceholder(javafx.scene.layout.StackPane pane) {
-        Label emoji = new Label("🥬");
-        emoji.setStyle("-fx-font-size: 40px;");
-        pane.getChildren().add(emoji);
+    private void addProductImage(StackPane pane, String imagePath, String category) {
+        if (imagePath == null || imagePath.isBlank()) {
+            addFallbackImage(pane, category);
+            return;
+        }
+
+        try {
+            boolean remoteImage = imagePath.startsWith("http://") || imagePath.startsWith("https://");
+            String imageSource = remoteImage ? imagePath : resolveResourceImagePath(imagePath);
+
+            if (imageSource == null) {
+                addFallbackImage(pane, category);
+                return;
+            }
+
+            Image image = getCachedImage(imageSource, remoteImage);
+            ImageView imageView = createProductImageView(image);
+
+            if (!remoteImage || image.getProgress() >= 1.0) {
+                if (image.isError()) {
+                    addFallbackImage(pane, category);
+                } else {
+                    pane.getChildren().add(imageView);
+                }
+                return;
+            }
+
+            addFallbackImage(pane, category);
+            image.progressProperty().addListener((obs, oldProgress, newProgress) -> {
+                if (newProgress.doubleValue() >= 1.0 && !image.isError()) {
+                    pane.getChildren().setAll(imageView);
+                }
+            });
+        } catch (Exception e) {
+            addFallbackImage(pane, category);
+        }
+    }
+
+    private String resolveResourceImagePath(String imagePath) {
+        URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
+        return imgUrl == null ? null : imgUrl.toExternalForm();
+    }
+
+    private Image getCachedImage(String imageSource, boolean backgroundLoading) {
+        return imageCache.computeIfAbsent(imageSource, source ->
+                new Image(
+                        source,
+                        PRODUCT_IMAGE_WIDTH,
+                        PRODUCT_IMAGE_HEIGHT,
+                        true,
+                        true,
+                        backgroundLoading
+                )
+        );
+    }
+
+    private ImageView createProductImageView(Image image) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(PRODUCT_IMAGE_WIDTH);
+        imageView.setFitHeight(PRODUCT_IMAGE_HEIGHT);
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    private void addFallbackImage(StackPane pane, String category) {
+
+        String fallbackPath;
+
+        switch (category.toLowerCase()){
+
+            case "fruits & vegetables":
+                fallbackPath = "/com/grocery/ui/images/Fruits and Vegetables.png";
+                break;
+
+            case "beverages":
+                fallbackPath = "/com/grocery/ui/images/Beverages.png";
+                break;
+
+            case "bakery, cakes & dairy":
+                fallbackPath = "/com/grocery/ui/images/Bakery, Cakes & Dairy.png";
+                break;
+
+            case "snacks & branded foods":
+                fallbackPath = "/com/grocery/ui/images/Snacks & Branded Foods.png";
+                break;
+
+            case "cleaning & household":
+                fallbackPath = "/com/grocery/ui/images/Cleaning & Household.png";
+                break;
+
+            case "beauty & hygiene":
+                fallbackPath = "/com/grocery/ui/images/Beauty & Hygien.png";
+                break;
+
+            default:
+                fallbackPath = "/com/grocery/ui/images/Default.png";
+                break;
+        }
+
+        try {
+            URL fallbackUrl = getClass().getResource(fallbackPath);
+            if (fallbackUrl == null) {
+                throw new IllegalArgumentException("Missing fallback image: " + fallbackPath);
+            }
+
+            Image fallbackImage = getCachedImage(fallbackUrl.toExternalForm(), false);
+            ImageView fallbackView = createProductImageView(fallbackImage);
+
+            pane.getChildren().add(fallbackView);
+
+        } catch (Exception e) {
+
+            Label placeholder = new Label("No Image");
+            pane.getChildren().add(placeholder);
+        }
     }
 
     private void addToCart(JsonNode product) {
@@ -411,7 +531,13 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
-                Platform.runLater(() -> buildProductGrid(list));
+                displayedProducts = list;
+
+                Platform.runLater(() -> {
+                    setupCategories();
+                    currentPage = 0;
+                    showProductPage();
+                });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
             }
@@ -419,23 +545,47 @@ public class CustomerController {
     }
 
     private void setupCategories() {
-        categoryFilter.setItems(FXCollections.observableArrayList(
-                "All", "Produce", "Dairy", "Meat", "Seafood", "Bakery", "Frozen", "Beverages", "Pantry"));
+
+        java.util.Set<String> categories = new java.util.TreeSet<>();
+
+        allProducts.forEach(product -> {
+            String category = product.path("category").asText();
+
+            if (!category.isBlank()) {
+                categories.add(category);
+            }
+        });
+
+        ObservableList<String> categoryList =
+                FXCollections.observableArrayList();
+
+        categoryList.add("All");
+        categoryList.addAll(categories);
+
+        categoryFilter.setItems(categoryList);
         categoryFilter.setValue("All");
     }
 
     @FXML
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
+
         if (cat == null || cat.equals("All")) {
-            buildProductGrid(allProducts);
+            displayedProducts = allProducts;
         } else {
-            ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
+            displayedProducts = FXCollections.observableArrayList();
+
             allProducts.forEach(p -> {
-                if (p.path("category").asText().equals(cat)) filtered.add(p);
+                if (p.path("category").asText().equals(cat)) {
+                    displayedProducts.add(p);
+                }
             });
-            buildProductGrid(filtered);
+
+
         }
+
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -448,7 +598,9 @@ public class CustomerController {
                 filtered.add(p);
             }
         });
-        buildProductGrid(filtered);
+        displayedProducts = filtered;
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -541,7 +693,7 @@ public class CustomerController {
         }
     }
 
-    @FXML public void showShop() { switchPane(shopPane); setActive(navShop); loadProducts(); }
+    @FXML public void showShop() { switchPane(shopPane); setActive(navShop);}
     @FXML public void showCart() { switchPane(cartPane); setActive(navCart); updateCartTotal(); }
     @FXML public void showWallet() { switchPane(walletPane); setActive(navWallet); updateBalanceDisplay(); }
     @FXML public void showAI() { switchPane(aiPane); setActive(navAI); }
@@ -653,5 +805,25 @@ public class CustomerController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void showProductPage() {
+        productGrid.getChildren().clear();
+
+        int start = currentPage * pageSize;
+        int end = Math.min(start + pageSize, displayedProducts.size());
+
+        for (int i = start; i < end; i++) {
+            productGrid.getChildren().add(createProductCard(displayedProducts.get(i)));
+
+
+        }
+
+        int totalPages =
+                (int) Math.ceil((double) displayedProducts.size() / pageSize);
+
+        pageLabel.setText(
+                "Page " + (currentPage + 1) + " of " + totalPages
+        );
     }
 }
