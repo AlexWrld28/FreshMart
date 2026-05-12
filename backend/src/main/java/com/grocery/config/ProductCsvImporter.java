@@ -26,6 +26,8 @@ public class ProductCsvImporter implements CommandLineRunner {
         //    return; //Prevent duplicate imports every time app starts
         //}
 
+        productRepository.deleteAll();
+
         try (Reader reader = new InputStreamReader(
                 getClass().getResourceAsStream("/BigBasket.csv"))) {
 
@@ -34,8 +36,6 @@ public class ProductCsvImporter implements CommandLineRunner {
                     .build();
 
             String[] line;
-
-            int count = 0;
 
             while ((line = csvReader.readNext()) != null) {
 
@@ -57,10 +57,6 @@ public class ProductCsvImporter implements CommandLineRunner {
                 System.out.println("Imported: " + product.getName());
                 productRepository.save(product);
 
-                count++;
-                if (count >= 1) {
-                    break;
-                }
             }
         }
     }

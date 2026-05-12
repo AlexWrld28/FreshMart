@@ -53,8 +53,14 @@ public class CustomerController {
     @FXML private ComboBox<String> dietaryFilter;
     @FXML private TextField budgetField;
 
+    @FXML private Label pageLabel;
+
     private ObservableList<JsonNode> allProducts = FXCollections.observableArrayList();
     private final ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
+    private ObservableList<JsonNode> displayedProducts = FXCollections.observableArrayList();
+
+    private int currentPage = 0;
+    private final int pageSize = 50;
 
     public static class CartItem {
         private final long productId;
@@ -94,6 +100,22 @@ public class CustomerController {
         loadProducts();
         cartBadge.setVisible(false);
         cartBadge.setManaged(false);
+    }
+
+    @FXML
+    public void handleNextPage() {
+        if ((currentPage + 1) * pageSize < displayedProducts.size()) {
+            currentPage++;
+            showProductPage();
+        }
+    }
+
+    @FXML
+    public void handlePreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            showProductPage();
+        }
     }
 
     private void updateBalanceDisplay() {
@@ -485,9 +507,12 @@ public class CustomerController {
                 ObservableList<JsonNode> list = FXCollections.observableArrayList();
                 products.forEach(list::add);
                 allProducts = list;
+                displayedProducts = list;
+
                 Platform.runLater(() -> {
                     setupCategories();
-                    buildProductGrid(list);
+                    currentPage = 0;
+                    showProductPage();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> showAlert("Error", "Failed to load products."));
@@ -520,15 +545,23 @@ public class CustomerController {
     @FXML
     public void filterByCategory() {
         String cat = categoryFilter.getValue();
+
         if (cat == null || cat.equals("All")) {
-            buildProductGrid(allProducts);
+            displayedProducts = allProducts;
         } else {
-            ObservableList<JsonNode> filtered = FXCollections.observableArrayList();
+            displayedProducts = FXCollections.observableArrayList();
+
             allProducts.forEach(p -> {
-                if (p.path("category").asText().equals(cat)) filtered.add(p);
+                if (p.path("category").asText().equals(cat)) {
+                    displayedProducts.add(p);
+                }
             });
-            buildProductGrid(filtered);
+
+
         }
+
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -541,7 +574,9 @@ public class CustomerController {
                 filtered.add(p);
             }
         });
-        buildProductGrid(filtered);
+        displayedProducts = filtered;
+        currentPage = 0;
+        showProductPage();
     }
 
     @FXML
@@ -634,7 +669,7 @@ public class CustomerController {
         }
     }
 
-    @FXML public void showShop() { switchPane(shopPane); setActive(navShop); loadProducts(); }
+    @FXML public void showShop() { switchPane(shopPane); setActive(navShop);}
     @FXML public void showCart() { switchPane(cartPane); setActive(navCart); updateCartTotal(); }
     @FXML public void showWallet() { switchPane(walletPane); setActive(navWallet); updateBalanceDisplay(); }
     @FXML public void showAI() { switchPane(aiPane); setActive(navAI); }
@@ -746,5 +781,25 @@ public class CustomerController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void showProductPage() {
+        productGrid.getChildren().clear();
+
+        int start = currentPage * pageSize;
+        int end = Math.min(start + pageSize, displayedProducts.size());
+
+        for (int i = start; i < end; i++) {
+            productGrid.getChildren().add(createProductCard(displayedProducts.get(i)));
+
+
+        }
+
+        int totalPages =
+                (int) Math.ceil((double) displayedProducts.size() / pageSize);
+
+        pageLabel.setText(
+                "Page " + (currentPage + 1) + " of " + totalPages
+        );
     }
 }
