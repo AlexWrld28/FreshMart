@@ -12,17 +12,21 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CustomerController {
 
@@ -61,6 +65,9 @@ public class CustomerController {
 
     private int currentPage = 0;
     private final int pageSize = 50;
+    private static final double PRODUCT_IMAGE_WIDTH = 160;
+    private static final double PRODUCT_IMAGE_HEIGHT = 120;
+    private final Map<String, Image> imageCache = new ConcurrentHashMap<>();
 
     public static class CartItem {
         private final long productId;
@@ -152,52 +159,10 @@ public class CustomerController {
 
         javafx.scene.layout.StackPane imagePlaceholder = new javafx.scene.layout.StackPane();
         imagePlaceholder.getStyleClass().add("product-image-placeholder");
-        imagePlaceholder.setPrefSize(160, 120);
+        imagePlaceholder.setPrefSize(PRODUCT_IMAGE_WIDTH, PRODUCT_IMAGE_HEIGHT);
 
         String imagePath = product.path("imagePath").asText();
-        if (!imagePath.isEmpty()) {
-            try {
-                javafx.scene.image.Image image;
-
-                if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-
-                    image = new javafx.scene.image.Image(imagePath, false);
-
-                } else {
-
-                    java.net.URL imgUrl =
-                            getClass().getResource("/com/grocery/ui/" + imagePath);
-
-                    if (imgUrl == null) {
-                        addFallbackImage(imagePlaceholder, category);
-                        image = null;
-                    } else{
-                    image = new javafx.scene.image.Image(imgUrl.toExternalForm());
-                    }
-                }
-
-                if (image != null) {
-                    javafx.scene.image.ImageView imageView =
-                            new javafx.scene.image.ImageView(image);
-
-                    imageView.setFitWidth(160);
-                    imageView.setFitHeight(120);
-                    imageView.setPreserveRatio(true);
-
-                    if (image.getWidth() > 0 && !image.isError()) {
-                        imagePlaceholder.getChildren().add(imageView);
-                    } else {
-                        addFallbackImage(imagePlaceholder, category);
-                    }
-
-                }
-
-            } catch (Exception e) {
-                addFallbackImage(imagePlaceholder, category);
-            }
-        } else {
-            addFallbackImage(imagePlaceholder, category);
-        }
+        addProductImage(imagePlaceholder, imagePath, category);
 
         Label nameLabel = new Label(name);
         nameLabel.getStyleClass().add("product-card-name");
@@ -222,6 +187,70 @@ public class CustomerController {
         card.getStyleClass().add("product-card");
         card.setPrefWidth(180);
         return card;
+    }
+
+    private void addProductImage(StackPane pane, String imagePath, String category) {
+        if (imagePath == null || imagePath.isBlank()) {
+            addFallbackImage(pane, category);
+            return;
+        }
+
+        try {
+            boolean remoteImage = imagePath.startsWith("http://") || imagePath.startsWith("https://");
+            String imageSource = remoteImage ? imagePath : resolveResourceImagePath(imagePath);
+
+            if (imageSource == null) {
+                addFallbackImage(pane, category);
+                return;
+            }
+
+            Image image = getCachedImage(imageSource, remoteImage);
+            ImageView imageView = createProductImageView(image);
+
+            if (!remoteImage || image.getProgress() >= 1.0) {
+                if (image.isError()) {
+                    addFallbackImage(pane, category);
+                } else {
+                    pane.getChildren().add(imageView);
+                }
+                return;
+            }
+
+            addFallbackImage(pane, category);
+            image.progressProperty().addListener((obs, oldProgress, newProgress) -> {
+                if (newProgress.doubleValue() >= 1.0 && !image.isError()) {
+                    pane.getChildren().setAll(imageView);
+                }
+            });
+        } catch (Exception e) {
+            addFallbackImage(pane, category);
+        }
+    }
+
+    private String resolveResourceImagePath(String imagePath) {
+        URL imgUrl = getClass().getResource("/com/grocery/ui/" + imagePath);
+        return imgUrl == null ? null : imgUrl.toExternalForm();
+    }
+
+    private Image getCachedImage(String imageSource, boolean backgroundLoading) {
+        return imageCache.computeIfAbsent(imageSource, source ->
+                new Image(
+                        source,
+                        PRODUCT_IMAGE_WIDTH,
+                        PRODUCT_IMAGE_HEIGHT,
+                        true,
+                        true,
+                        backgroundLoading
+                )
+        );
+    }
+
+    private ImageView createProductImageView(Image image) {
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(PRODUCT_IMAGE_WIDTH);
+        imageView.setFitHeight(PRODUCT_IMAGE_HEIGHT);
+        imageView.setPreserveRatio(true);
+        return imageView;
     }
 
     private void addFallbackImage(StackPane pane, String category) {
@@ -260,18 +289,13 @@ public class CustomerController {
         }
 
         try {
+            URL fallbackUrl = getClass().getResource(fallbackPath);
+            if (fallbackUrl == null) {
+                throw new IllegalArgumentException("Missing fallback image: " + fallbackPath);
+            }
 
-            javafx.scene.image.Image fallbackImage =
-                    new javafx.scene.image.Image(
-                            getClass().getResource(fallbackPath).toExternalForm()
-                    );
-
-            javafx.scene.image.ImageView fallbackView =
-                    new javafx.scene.image.ImageView(fallbackImage);
-
-            fallbackView.setFitWidth(160);
-            fallbackView.setFitHeight(120);
-            fallbackView.setPreserveRatio(true);
+            Image fallbackImage = getCachedImage(fallbackUrl.toExternalForm(), false);
+            ImageView fallbackView = createProductImageView(fallbackImage);
 
             pane.getChildren().add(fallbackView);
 
