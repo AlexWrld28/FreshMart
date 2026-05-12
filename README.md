@@ -146,3 +146,6 @@ FreshMart/
 | POST | /api/ai/grocery-list | Generate AI grocery list |
 | GET | /api/users/customers | Get all customers |
 | POST | /api/users/topup | Top up balance |
+
+SRS Documentation
+https://1drv.ms/w/c/15ed0e2948a7d115/IQDbI2BbKew0TrvwOvt_oBo1AWSDS0fMNMny7NKKclduXXM?e=Vsn4B3 
