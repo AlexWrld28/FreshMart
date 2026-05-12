@@ -22,7 +22,7 @@ public class MainApp extends Application {
 
     public static void showLogin() throws Exception {
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/Login.fxml"));
-        Scene scene = new Scene(loader.load(), 900, 600);
+        Scene scene = new Scene(loader.load(), 1400, 800);
         scene.getStylesheets().add(MainApp.class.getResource("/css/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
@@ -30,7 +30,7 @@ public class MainApp extends Application {
 
     public static void showAdminDashboard() throws Exception {
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/AdminDashboard.fxml"));
-        Scene scene = new Scene(loader.load(), 1100, 700);
+        Scene scene = new Scene(loader.load(), 1400, 800);
         scene.getStylesheets().add(MainApp.class.getResource("/css/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
@@ -38,7 +38,7 @@ public class MainApp extends Application {
 
     public static void showCustomerDashboard() throws Exception {
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/fxml/CustomerDashboard.fxml"));
-        Scene scene = new Scene(loader.load(), 1100, 700);
+        Scene scene = new Scene(loader.load(), 1400, 800);
         scene.getStylesheets().add(MainApp.class.getResource("/css/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();

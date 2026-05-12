@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class LoginController {
     @FXML private Label errorLabel;
     @FXML private TextField passwordVisible;
     @FXML private Button togglePassword;
+    @FXML private ImageView logoImage;
 
     @FXML
     public void handleLogin() {
@@ -92,6 +94,13 @@ public class LoginController {
             passwordField.setVisible(true);
             passwordField.setManaged(true);
             togglePassword.setText("Show");
+        }
+    }
+
+    public void initialize() {
+        java.net.URL imgUrl = getClass().getResource("/com/grocery/ui/images/Logo.png");
+        if (logoImage != null && imgUrl != null) {
+            logoImage.setImage(new javafx.scene.image.Image(imgUrl.toExternalForm()));
         }
     }
 

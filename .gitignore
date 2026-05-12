@@ -1,6 +1,7 @@
 backend/src/main/resources/application.properties
 backend/target/
 frontend/target/
+target/
 .idea/
 *.db
 backend/.env

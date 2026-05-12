@@ -55,6 +55,10 @@ public class RegisterController {
             errorLabel.setText("Passwords do not match.");
             return;
         }
+        if (!isValidEmail(email)) {
+            errorLabel.setText("Please enter a valid email address.");
+            return;
+        }
 
         new Thread(() -> {
             try {
@@ -152,5 +156,9 @@ public class RegisterController {
             confirmPasswordField.setManaged(true);
             toggleConfirmPassword.setText("Show");
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$");
     }
 }

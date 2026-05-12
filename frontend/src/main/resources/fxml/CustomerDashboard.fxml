@@ -26,7 +26,7 @@
             </HBox>
         </top>
         <left>
-            <VBox styleClass="sidebar" spacing="4" minWidth="200">
+            <VBox styleClass="sidebar" spacing="8" minWidth="220">
                 <Label text="CUSTOMER" styleClass="sidebar-section"/>
                 <Button fx:id="navShop" text="Shop" onAction="#showShop" maxWidth="Infinity" styleClass="nav-btn"/>
                 <Button fx:id="navCart" text="Cart" onAction="#showCart" maxWidth="Infinity" styleClass="nav-btn"/>
@@ -40,54 +40,70 @@
             <StackPane fx:id="contentArea" styleClass="content-area">
 
                 <VBox fx:id="shopPane" spacing="16" styleClass="dashboard-pane">
-                    <HBox alignment="CENTER_LEFT" spacing="12">
+                    <VBox styleClass="page-header-band" spacing="10">
                         <Label text="Shop Products" styleClass="page-title"/>
-                        <TextField fx:id="searchField" promptText="Search products..." styleClass="search-field" prefWidth="200" onKeyReleased="#searchProducts" HBox.hgrow="ALWAYS"/>
-                        <ComboBox fx:id="categoryFilter" promptText="All Categories" onAction="#filterByCategory" styleClass="combo-field"/>
-                    </HBox>
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="shop-scroll">
-                        <FlowPane fx:id="productGrid" hgap="16" vgap="16" styleClass="product-grid"/>
-                    </ScrollPane>
-                    <HBox alignment="BOTTOM_RIGHT" spacing="12">
-                        <Label fx:id="pageLabel" text="Page 1 of 1" styleClass="topbar-balance"/>
-                        <Button text="Previous" onAction="#handlePreviousPage" styleClass="btn-primary"/>
-                        <Button text="Next" onAction="#handleNextPage" styleClass="btn-primary"/>
-                    </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="toolbar-panel">
+                            <TextField fx:id="searchField" promptText="Search products..." styleClass="search-field" prefWidth="200" onKeyReleased="#searchProducts" HBox.hgrow="ALWAYS"/>
+                            <ComboBox fx:id="categoryFilter" promptText="All Categories" onAction="#filterByCategory" styleClass="combo-field"/>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="table-shell shop-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="shop-scroll">
+                            <FlowPane fx:id="productGrid" hgap="16" vgap="16" styleClass="product-grid"/>
+                        </ScrollPane>
+                        <HBox alignment="BOTTOM_RIGHT" spacing="12">
+                            <Label fx:id="pageLabel" text="Page 1 of 1" styleClass="topbar-balance"/>
+                            <Button text="Previous" onAction="#handlePreviousPage" styleClass="btn-primary"/>
+                            <Button text="Next" onAction="#handleNextPage" styleClass="btn-primary"/>
+                        </HBox>
+                    </VBox>
                 </VBox>
 
                 <VBox fx:id="cartPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label text="My Cart" styleClass="page-title"/>
-                        <Label fx:id="cartTotalLabel" text="Cart Total: $0.00" styleClass="topbar-balance" HBox.hgrow="ALWAYS"/>
-                        <Button text="Clear Cart" onAction="#handleClearCart" styleClass="btn-delete"/>
-                        <Button text="Checkout" onAction="#handleCheckout" styleClass="btn-primary"/>
-                    </HBox>
-                    <TableView fx:id="cartTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colCartName" text="Product" prefWidth="220"/>
-                            <TableColumn fx:id="colCartPrice" text="Price" prefWidth="90"/>
-                            <TableColumn fx:id="colCartQty" text="Qty" prefWidth="60"/>
-                            <TableColumn fx:id="colCartSubtotal" text="Subtotal" prefWidth="100"/>
-                            <TableColumn fx:id="colCartAction" text="Actions" prefWidth="220"/>
-                        </columns>
-                    </TableView>
+                    <VBox styleClass="page-header-band" spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="toolbar-panel">
+                            <Label text="My Cart" styleClass="page-title"/>
+                            <Label fx:id="cartTotalLabel" text="Cart Total: $0.00" styleClass="topbar-balance" HBox.hgrow="ALWAYS"/>
+                            <Button text="Clear Cart" onAction="#handleClearCart" styleClass="btn-delete"/>
+                            <Button text="Checkout" onAction="#handleCheckout" styleClass="btn-primary"/>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="cartTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colCartName" text="Product" prefWidth="220"/>
+                                <TableColumn fx:id="colCartPrice" text="Price" prefWidth="90"/>
+                                <TableColumn fx:id="colCartQty" text="Qty" prefWidth="60"/>
+                                <TableColumn fx:id="colCartSubtotal" text="Subtotal" prefWidth="100"/>
+                                <TableColumn fx:id="colCartAction" text="Actions" prefWidth="220"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
                 </VBox>
 
                 <VBox fx:id="ordersPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                    <Label text="My Orders" styleClass="page-title"/>
-                    <TableView fx:id="ordersTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colOrdProduct" text="Product" prefWidth="220"/>
-                            <TableColumn fx:id="colOrdQty" text="Qty" prefWidth="70"/>
-                            <TableColumn fx:id="colOrdTotal" text="Total" prefWidth="110"/>
-                            <TableColumn fx:id="colOrdStatus" text="Status" prefWidth="110"/>
-                            <TableColumn fx:id="colOrdDate" text="Date" prefWidth="180"/>
-                        </columns>
-                    </TableView>
+                    <VBox styleClass="page-header-band" spacing="6">
+                        <Label text="My Orders" styleClass="page-title"/>
+                        <Label text="Your recent receipts, totals, and order status." styleClass="page-subtitle"/>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="ordersTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colOrdProduct" text="Product" prefWidth="220"/>
+                                <TableColumn fx:id="colOrdQty" text="Qty" prefWidth="70"/>
+                                <TableColumn fx:id="colOrdTotal" text="Total" prefWidth="110"/>
+                                <TableColumn fx:id="colOrdStatus" text="Status" prefWidth="110"/>
+                                <TableColumn fx:id="colOrdDate" text="Date" prefWidth="180"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
                 </VBox>
 
                 <VBox fx:id="walletPane" spacing="20" styleClass="dashboard-pane" alignment="TOP_LEFT" visible="false" managed="false">
-                    <Label text="My Wallet" styleClass="page-title"/>
+                    <VBox styleClass="page-header-band" spacing="6">
+                        <Label text="My Wallet" styleClass="page-title"/>
+                        <Label text="Track your balance and add funds when needed." styleClass="page-subtitle"/>
+                    </VBox>
                     <HBox spacing="20">
                         <VBox styleClass="stat-card" spacing="8" prefWidth="280">
                             <Label text="Current Balance" styleClass="stat-label"/>
@@ -106,24 +122,28 @@
                 </VBox>
 
                 <VBox fx:id="aiPane" spacing="16" styleClass="dashboard-pane" visible="false" managed="false">
-                    <Label text="AI Grocery List" styleClass="page-title"/>
-                    <HBox spacing="12" alignment="CENTER_LEFT">
-                        <TextField fx:id="aiPromptField" promptText="e.g. I want to make tacos for 4 people"
-                                   styleClass="search-field" HBox.hgrow="ALWAYS"/>
-                        <ComboBox fx:id="dietaryFilter" promptText="Dietary Filter" styleClass="combo-field"/>
-                        <TextField fx:id="budgetField" promptText="Budget ($)" styleClass="search-field" prefWidth="100"/>
-                        <Button text="Generate List" onAction="#handleGenerateList" styleClass="btn-primary"/>
-                    </HBox>
-                    <Label fx:id="aiStatusLabel" styleClass="field-label" wrapText="true"/>
-                    <TableView fx:id="aiResultTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colAIName" text="Ingredient" prefWidth="170"/>
-                            <TableColumn fx:id="colAIQty" text="Quantity" prefWidth="100"/>
-                            <TableColumn fx:id="colAIMatch" text="Best Match in Store" prefWidth="200"/>
-                            <TableColumn fx:id="colAIPrice" text="Price" prefWidth="80"/>
-                            <TableColumn fx:id="colAIAction" text="" prefWidth="110"/>
-                        </columns>
-                    </TableView>
+                    <VBox styleClass="page-header-band" spacing="10">
+                        <Label text="AI Grocery List" styleClass="page-title"/>
+                        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar-panel">
+                            <TextField fx:id="aiPromptField" promptText="e.g. I want to make tacos for 4 people"
+                                       styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                            <ComboBox fx:id="dietaryFilter" promptText="Dietary Filter" styleClass="combo-field"/>
+                            <TextField fx:id="budgetField" promptText="Budget ($)" styleClass="search-field" prefWidth="100"/>
+                            <Button text="Generate List" onAction="#handleGenerateList" styleClass="btn-primary"/>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="table-shell" spacing="12" VBox.vgrow="ALWAYS">
+                        <Label fx:id="aiStatusLabel" styleClass="field-label" wrapText="true"/>
+                        <TableView fx:id="aiResultTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colAIName" text="Ingredient" prefWidth="170"/>
+                                <TableColumn fx:id="colAIQty" text="Quantity" prefWidth="100"/>
+                                <TableColumn fx:id="colAIMatch" text="Best Match in Store" prefWidth="200"/>
+                                <TableColumn fx:id="colAIPrice" text="Price" prefWidth="80"/>
+                                <TableColumn fx:id="colAIAction" text="" prefWidth="110"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
                 </VBox>
 
             </StackPane>
