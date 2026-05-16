@@ -76,7 +76,15 @@ Open the `frontend` folder as a Maven project in IntelliJ and run `MainApp.java`
 cd frontend
 mvn javafx:run
 ```
+## Alternate
 
+### Step 1 — Start the Backend
+Open `backend/src/main/java/com/grocery/GroceryApplication.java` in IntelliJ and click the green run button.
+
+### Step 2 — Start the Frontend
+Open `frontend/src/main/java/com/grocery/ui/MainApp.java` in IntelliJ and click the green run button.
+
+**Note:** Add your Gemini API key to `backend/src/main/resources/application.properties` for the AI Grocery List feature was emailed to you:
 ## Features
 
 ### Customer
