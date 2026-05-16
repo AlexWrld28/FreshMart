@@ -43,7 +43,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>/Users/jomarlubin/Documents/Hackathon/FreshMart/backend/src/main/resources/application.properties</remarks>
+      <remarks>C:/Users/Jonathan Salvador/IdeaProjects/FreshMartashndja/backend/src/main/resources/application.properties</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:grocery.db</jdbc-url>
       <auth-provider>no-auth</auth-provider>

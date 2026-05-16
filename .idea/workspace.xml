@@ -5,61 +5,173 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9068ce98-d059-4e97-a40b-dc4f9b907442" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AIController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController$ItemComputation.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/service/AIService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/CustomerController$CheckoutAttempt.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/images/Logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/CartItem.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Customer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/InventorySnapshot.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/LaneSnapshot.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Product.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/Receipt.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/SimulationConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/SimulationResult.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StockItem.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreEvent.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreEventType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/model/StoreSnapshot.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation$CheckoutLane.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation$CustomerOrder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/GroceryStoreSimulation.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager$InventoryRecord.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager$Reservation.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/InventoryManager.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/org/example/grocery/service/StoreListener.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/test-classes/org/example/grocery/GroceryStoreSimulationSelfTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/2% fat reduced milk.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Almond milk.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/American cheese.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Bagels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Blueberry muffins.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Boneless chicken breast.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Cheddar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Chocolat chip muffins.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Cinnamon raisan bread.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Corn tortilla.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Croissant.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Everything bagel.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Heavy whipping cream.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Moza.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Multigrain.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Oatmilk.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Pork tenderloin.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Salted Butter.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Scallops.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Skim milk.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Sourdough.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Tortilla wraps.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/White bread.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Whole chicken.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Whole wheat.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/alfredo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/all purpose flour.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/almond breeze.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/almond butter.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/apple juice.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/asparagus.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/baby spinach.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/bacon.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/baking powder.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/baking soda.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/bell peppers.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/black beans.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/black pepper.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/block of cream cheese on white plate, food photography, clean background.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/blue berries.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/brown rice.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/brown sugar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/carrots.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cauliflower.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/celery.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cheerios.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cherry tomatoes.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/chicken broth.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/chicken thighs.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/chickpeas.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/chocolate chip muffins.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/chocolate ice cream.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/clams.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/coca cola 12 pack.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cocoa powder.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cod filet.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/coffee beans.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/corn.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cottage cheese.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/crab legs.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/crackers.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/cucumbers.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/dark chocolate.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/deli ham.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/deli turkey.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/diced tomatoes.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/diet coke.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/dozen white eggs in open cardboard carton, white background, clean food photography (1).jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/dozen white eggs in open cardboard carton, white background, clean food photography.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frosted flakes.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen burrtiops.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen cheese.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen chicken nuggets.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen corn.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen edamame.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen fish sticks.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen lasagna.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen peas.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen pizza.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen shrimp.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/frozen vegetables mix.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/fusili.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/garlic powder.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/garlic.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/gatorade.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/granny smith apples.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/granola.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/ground beef.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/honey.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/hot sauce.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/hotdogs.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/iceberg lettuce.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/icecream.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/italian sausage.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/italian seasoning.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/jumbo shrimp.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/kale.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/ketchup.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/lab chops.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/lemonade.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/lemons.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/lentils.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/limes.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/lobster tail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/mango.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/maple syrup.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/marinara.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/mayo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/mustard.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/nutella.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/oatmeal.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/olive oil.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/oranges.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/pasta.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/peanut butter.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/penne.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/pepsi.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/pita.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/plain white greek yogurt in glass bowl with spoon, clean background, food photography.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/popcorn.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/pork cho[s.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/potato chips.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/protein b ar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/raspberries.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/red bull.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/red onion.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/ribeye.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/salsa.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/salt.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/shrimp.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/sour cream in white bowl with spoon, food photography, clean background.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/soy.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/sparkling.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/spring water.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/sprite.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/strawberry jam.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/strawberry yogurt cup with fresh strawberries, food photography, white background.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/sugar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/sweet potatoes.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/tiliapia filet.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/tortilla chips.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/tuna can.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/tuna steak.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/turkey bacon.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/vanilla extract.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/vanilla yogurt in white cup with spoon, clean food photography.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/vegetable broth.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/vegetable oil.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/waffles.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/watermelon.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/white rice.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/yellow onion.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/zuchinni.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/grocery.db" beforeDir="false" afterPath="$PROJECT_DIR$/backend/grocery.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/grocery/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/grocery/controller/OrderController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/MainApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/MainApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/com/grocery/ui/controllers/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/AdminDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/CustomerDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/fxml/Register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/AdminController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/RegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/com/grocery/ui/controllers/RegisterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/fxml/AdminDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/fxml/Login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/fxml/Register.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/fxml/Register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/grocery-app/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Bakery, Cakes &amp; Dairy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Beauty &amp; Hygien.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Beverages.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Cleaning &amp; Household.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Default.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Fruits and Vegetables.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Logo-removebg-preview.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/com/grocery/ui/images/Snacks &amp; Branded Foods.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,12 +194,12 @@
     &quot;assignee&quot;: &quot;dunn7&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/AlexWrld28/FreshMart.git&quot;,
-    &quot;accountId&quot;: &quot;b05f696e-aab8-4cfc-92a6-fc4403bcafeb&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AlexWrld28/FreshMart.git",
+    "accountId": "9764566d-544f-4681-8ea8-d482da2b5b3d"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -116,10 +228,10 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.GroceryApplication.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Merging New__item__list",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Jake/IdeaProjects/grocery-app/backend/.env",
+    "last_opened_file_path": "C:/Users/Jonathan Salvador/IdeaProjects/FreshMartashndja/frontend/src/main/resources/com/grocery/ui/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -135,12 +247,13 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMartashndja\frontend\src\main\resources\com\grocery\ui\images" />
       <recent name="C:\Users\Jake\IdeaProjects\grocery-app\backend" />
       <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test" />
       <recent name="C:\Users\Jonathan Salvador\IdeaProjects\FreshMart\FreshMart-test\backend" />
     </key>
   </component>
-  <component name="RunManager" selected="Compound.Grocery App Run">
+  <component name="RunManager" selected="Application.MainApp">
     <configuration name="MainApp" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.grocery.ui.MainApp" />
       <module name="grocery-frontend" />
@@ -157,6 +270,7 @@
     <configuration name="GroceryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="grocery-backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.grocery.GroceryApplication" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/backend" />
       <extension name="net.ashald.envfile">
         <option name="IS_ENABLED" value="true" />
         <option name="IS_SUBST" value="false" />
@@ -204,6 +318,7 @@
       <workItem from="1778036520744" duration="237000" />
       <workItem from="1778036765243" duration="1477000" />
       <workItem from="1778340620027" duration="502000" />
+      <workItem from="1778891516340" duration="483000" />
     </task>
     <servers />
   </component>
