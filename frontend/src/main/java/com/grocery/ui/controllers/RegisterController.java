@@ -60,6 +60,11 @@ public class RegisterController {
             return;
         }
 
+        if (!isValidEmail(email)) {
+            errorLabel.setText("Please enter a valid email address.");
+            return;
+        }
+
         new Thread(() -> {
             try {
                 JsonNode response = ApiService.postWithStatus("/auth/register",
