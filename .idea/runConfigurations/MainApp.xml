@@ -2,6 +2,8 @@
   <configuration default="false" name="MainApp" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="com.grocery.ui.MainApp" />
     <module name="grocery-frontend" />
+    <option name="ALTERNATIVE_JRE_PATH" value="liberica-full-21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <shortenClasspath name="MANIFEST" />
     <method v="2">
       <option name="Make" enabled="true" />
